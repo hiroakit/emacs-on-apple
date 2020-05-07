@@ -26,6 +26,8 @@ if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
 fi
 
 clean() {
+    echo "Run ${FUNCNAME[0]}"
+
     rm -rf ${srcdir}
     rm -rf ${pkgdir}        
 }              
@@ -78,6 +80,9 @@ build_emacs26() {
     patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
     
     ./autogen.sh
+
+    # Why use without-jpeg, without-lcms2 and without-gnutls?
+    # Reason: https://github.com/hiroakit/emacs-on-apple/issues/2
     ./configure CC=clang\
                 --with-ns\
                 --with-modules\
@@ -87,8 +92,11 @@ build_emacs26() {
                 --without-mail-unlink\
                 --without-mailhost\
                 --without-pop\
-                --without-mailutils
-
+                --without-mailutils\
+                --without-jpeg\
+                --without-lcms2\
+                --without-gnutls
+    
     make bootstrap
     make install
 
@@ -111,7 +119,7 @@ case "$COMMAND" in
         exit 0
         ;;
     "emacs26")
-        build_emacs26
+        clean && build_emacs26
         exit 0
         ;;
     *)
