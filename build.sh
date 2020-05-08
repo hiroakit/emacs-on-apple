@@ -74,9 +74,10 @@ build_emacs26() {
 
     tar Jxfv ${pkgname}-${pkgver}.tar.xz
     cd ${pkgname}-${pkgver}
+    patch -p1 -i ../../00-bump-copyright-year.patch
     patch -p1 -i ../../01-remove-blessmail.patch
     patch -p1 -i ../../02-provisional-emacs26.3-unexmacosx.c.patch
-    patch -p1 -i ../../03-bump-version-emacs26.3.52.patch
+    patch -p1 -i ../../03-bump-emacs-version.patch
     patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
     
     ./autogen.sh
