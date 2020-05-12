@@ -29,6 +29,8 @@ Finally
 
 - [A Mitsuharu Yamamoto Emacs: emacs-mac](https://bitbucket.org/mituharu/emacs-mac)
 - [A Vincent Goulet Emacs: emacs-modified-macos](https://gitlab.com/vigou3/emacs-modified-macos/)
+- [GNU Emacs For Mac OS X](https://emacsformacosx.com)
+- [Emacs mac port formulae for the Homebrew package manager](https://github.com/railwaycat/homebrew-emacsmacport)
 
 # Supporting
 
