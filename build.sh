@@ -1,6 +1,20 @@
 #!/bin/bash
 
-# Emacs builder
+# A build script to make GNU Emacs on macOS.
+# Copyright (C) 2020 Hiroaki ENDOH
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 set -o pipefail
 set -e
@@ -40,6 +54,27 @@ checksum() {
         exit -1
     fi
 }         
+
+codesign() {
+    echo "Run ${FUNCNAME[0]}"
+    
+    if [ "$#" -eq 0 -o "$#" -gt 1 ]; then
+        echo "Require Developer ID. Check Keychain.app on your Mac."
+        exit 1
+    fi
+
+    declare DEVELOPER_ID="$1"
+    
+    xcrun codesign --verify \
+                   --sign "Developer ID Application: ${DEVELOPER_ID}" \
+                   --force \
+                   --verbose \
+                   --deep \
+                   --options runtime \
+                   --entitlements entitlements.plist \
+                   --timestamp \
+                   ./pkg/Applications/Emacs/Emacs.app
+}
 
 # Build Emacs 26
 build_emacs26() {
@@ -117,6 +152,11 @@ case "$COMMAND" in
         ;;
     "clean")
         clean
+        exit 0
+        ;;
+    "codesign")
+        # Require Developer ID at 2nd argument.
+        codesign "$2"
         exit 0
         ;;
     "emacs26")
