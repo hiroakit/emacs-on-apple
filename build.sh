@@ -87,6 +87,7 @@ build_emacs26() {
     
     mkdir -p ${srcdir}
     cd ${srcdir}
+
     curl -LO https://ftp.gnu.org/gnu/emacs/${pkgname}-${pkgver}.tar.xz
     if test -e ns-inline-patch; then
         rm -rf ns-inline-patch
@@ -137,9 +138,8 @@ build_emacs26() {
     make install
 
     cd ../../
-    mkdir -p ./${pkgdir}
-    echo `pwd`
-    cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/
+    mkdir -p ./${pkgdir}/Applications/Emacs
+    cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
 COMMAND="$1"                 # Using 1st argument as command
