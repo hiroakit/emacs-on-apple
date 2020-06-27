@@ -114,6 +114,7 @@ build_emacs26() {
     patch -p1 -i ../../01-remove-blessmail.patch
     patch -p1 -i ../../02-provisional-emacs26.3-unexmacosx.c.patch
     patch -p1 -i ../../03-bump-emacs-version.patch
+    patch -p1 -i ../../04-macos-big-sur.patch
     patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
     
     ./autogen.sh
