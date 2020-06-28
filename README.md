@@ -4,6 +4,13 @@
 
 Emacs for Apple devices.
 
+# Usage
+
+```sh
+# Required autoconf, automake, pkg-config, Xcode Command Line Tools
+sh build.sh emacs26
+```
+
 # Objective
 
 Immediate 
