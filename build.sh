@@ -2,17 +2,17 @@
 
 # A build script to make GNU Emacs on macOS.
 # Copyright (C) 2020 Hiroaki ENDOH
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -43,8 +43,8 @@ clean() {
     echo "Run ${FUNCNAME[0]}"
 
     rm -rf ${srcdir}
-    rm -rf ${pkgdir}        
-}              
+    rm -rf ${pkgdir}
+}
 
 checksum() {
     declare -r filesum=`shasum -a 256 ${1} | awk '{print $1}'`
@@ -53,18 +53,18 @@ checksum() {
         echo "Unmatch sha256sum"
         exit -1
     fi
-}         
+}
 
 codesign() {
     echo "Run ${FUNCNAME[0]}"
-    
+
     if [ "$#" -eq 0 -o "$#" -gt 1 ]; then
         echo "Require Developer ID. Check Keychain.app on your Mac."
         exit 1
     fi
 
     declare DEVELOPER_ID="$1"
-    
+
     xcrun codesign --verify \
                    --sign "Developer ID Application: ${DEVELOPER_ID}" \
                    --force \
@@ -84,7 +84,7 @@ build_emacs26() {
     declare pkgver="26.3"
     declare -i pkgrel=1
     declare -r sha256sum="4d90e6751ad8967822c6e092db07466b9d383ef1653feb2f95c93e7de66d3485"
-    
+
     mkdir -p ${srcdir}
     cd ${srcdir}
 
@@ -96,14 +96,14 @@ build_emacs26() {
 
     checksum ${pkgname}-${pkgver}.tar.xz\
              "4d90e6751ad8967822c6e092db07466b9d383ef1653feb2f95c93e7de66d3485"
-    if test $? -ne 0; then 
+    if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
     fi
 
     checksum ns-inline-patch/emacs-25.2-inline.patch\
              "36cc154a9bad2f8a1927bc87b4c89183fb25f2e3bbe04d73690bf947f59639d8"
-    if test $? -ne 0; then 
+    if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
     fi
@@ -116,7 +116,7 @@ build_emacs26() {
     patch -p1 -i ../../03-bump-emacs-version.patch
     patch -p1 -i ../../04-macos-big-sur.patch
     patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
-    
+
     ./autogen.sh
 
     # Why use without-jpeg, without-lcms2 and without-gnutls?
@@ -134,13 +134,77 @@ build_emacs26() {
                 --without-jpeg\
                 --without-lcms2\
                 --without-gnutls
-    
+
     make bootstrap
     make install
 
     cd ../../
     mkdir -p ./${pkgdir}/Applications/Emacs
     cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
+}
+
+build_emacs28() {
+    echo "Run ${FUNCNAME[0]}"
+
+    declare -r emacs_pkgname="emacs"
+    declare emacs_pkgver="28.0.90"
+    declare -r emacs_sha256sum="6f10c72f9358fe1e39c761faf84bc1e5d81fb848f282c95bec34a9a77bc16288"
+
+    mkdir -p ${srcdir}
+    cd ${srcdir}
+
+    curl -LO https://alpha.gnu.org/gnu/emacs/pretest/${emacs_pkgname}-${emacs_pkgver}.tar.xz
+#    if test -e ns-inline-patch; then
+#        rm -rf ns-inline-patch
+#    fi
+#    git clone --depth 1 https://github.com/takaxp/ns-inline-patch.git
+#
+    checksum ${emacs_pkgname}-${emacs_pkgver}.tar.xz ${emacs_sha256sum}
+    if test $? -ne 0; then
+        echo "Unmatch sha256sum"
+        exit -1
+    fi
+
+#    checksum ns-inline-patch/emacs-25.2-inline.patch\
+#             "36cc154a9bad2f8a1927bc87b4c89183fb25f2e3bbe04d73690bf947f59639d8"
+#    if test $? -ne 0; then
+#        echo "Unmatch sha256sum"
+#        exit -1
+#    fi
+
+    tar Jxfv ${emacs_pkgname}-${emacs_pkgver}.tar.xz
+    cd ${emacs_pkgname}-${emacs_pkgver}
+#    patch -p1 -i ../../00-bump-copyright-year.patch
+#    patch -p1 -i ../../01-remove-blessmail.patch
+#    patch -p1 -i ../../02-provisional-emacs26.3-unexmacosx.c.patch
+#    patch -p1 -i ../../03-bump-emacs-version.patch
+#    patch -p1 -i ../../04-macos-big-sur.patch
+#    patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
+
+    ./autogen.sh
+
+    # Why use without-jpeg, without-lcms2 and without-gnutls?
+    # Reason: https://github.com/hiroakit/emacs-on-apple/issues/2
+    ./configure CC=clang\
+                --with-ns\
+                --with-modules\
+                --without-x\
+                --without-selinux\
+                --without-makeinfo\
+                --without-mail-unlink\
+                --without-mailhost\
+                --without-pop\
+                --without-mailutils\
+                --without-jpeg\
+                --without-lcms2\
+                --without-gnutls
+
+    make bootstrap
+    make install
+
+    cd ../../
+    mkdir -p ./${pkgdir}/Applications/Emacs
+    cp -r ${srcdir}/${emacs_pkgname}-${emacs_pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
 COMMAND="$1"                 # Using 1st argument as command
@@ -162,6 +226,10 @@ case "$COMMAND" in
         ;;
     "emacs26")
         clean && build_emacs26
+        exit 0
+        ;;
+    "emacs28")
+        clean && build_emacs28
         exit 0
         ;;
     *)
