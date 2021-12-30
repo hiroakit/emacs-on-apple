@@ -157,29 +157,18 @@ build_emacs28() {
 #    if test -e ns-inline-patch; then
 #        rm -rf ns-inline-patch
 #    fi
-#    git clone --depth 1 https://github.com/takaxp/ns-inline-patch.git
-#
     checksum ${emacs_pkgname}-${emacs_pkgver}.tar.xz ${emacs_sha256sum}
     if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
     fi
 
-#    checksum ns-inline-patch/emacs-25.2-inline.patch\
-#             "36cc154a9bad2f8a1927bc87b4c89183fb25f2e3bbe04d73690bf947f59639d8"
-#    if test $? -ne 0; then
-#        echo "Unmatch sha256sum"
-#        exit -1
-#    fi
-
     tar Jxfv ${emacs_pkgname}-${emacs_pkgver}.tar.xz
     cd ${emacs_pkgname}-${emacs_pkgver}
-#    patch -p1 -i ../../00-bump-copyright-year.patch
-#    patch -p1 -i ../../01-remove-blessmail.patch
-#    patch -p1 -i ../../02-provisional-emacs26.3-unexmacosx.c.patch
-#    patch -p1 -i ../../03-bump-emacs-version.patch
-#    patch -p1 -i ../../04-macos-big-sur.patch
-#    patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
+#    patch -p1 -i ../../patches/emacs28/00-bump-copyright-year.patch
+    patch -p1 -i ../../patches/emacs28/01_remove-blessmail.patch
+    patch -p1 -i ../../patches/emacs28/02-bump-emacs-version.patch
+    patch -p1 -i ../../patches/emacs28/10_window-autosave.patch
 
     ./autogen.sh
 
