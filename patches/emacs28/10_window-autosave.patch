@@ -1,0 +1,19 @@
+--- a/src/nsterm.m
++++ b/src/nsterm.m
+@@ -1443,6 +1443,7 @@ -(void)remove
+     {
+       EmacsView *view = (EmacsView *)FRAME_NS_VIEW (f);
+       EmacsWindow *window = (EmacsWindow *)[view window];
++      [window setFrameAutosaveName:@"EmacsAppWindow"];
+ 
+       SET_FRAME_VISIBLE (f, 1);
+       ns_raise_frame (f, ! FRAME_NO_FOCUS_ON_MAP (f));
+@@ -5684,6 +5685,8 @@ - (void) terminate: (id)sender
+ {
+   NSTRACE ("[EmacsApp terminate:]");
+ 
++  NSWindow *main = [[NSApplication sharedApplication] mainWindow];
++  [main saveFrameUsingName:@"EmacsAppWindow"];
+   struct frame *emacsframe = SELECTED_FRAME ();
+ 
+   if (!emacs_event)

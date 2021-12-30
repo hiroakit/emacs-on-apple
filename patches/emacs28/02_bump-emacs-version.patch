@@ -1,0 +1,22 @@
+--- a/configure.ac	2021-12-02 05:37:08.000000000 +0900
++++ b/configure.ac	2021-12-30 15:23:32.000000000 +0900
+@@ -24,6 +24,7 @@ dnl  along with GNU Emacs.  If not, see 
+ AC_PREREQ(2.65)
+ dnl Note this is parsed by (at least) make-dist and lisp/cedet/ede/emacs.el.
+ AC_INIT(GNU Emacs, 28.0.90, bug-gnu-emacs@gnu.org, , https://www.gnu.org/software/emacs/)
++AC_SUBST(build_number, 1)
+ 
+ dnl Set emacs_config_options to the options of 'configure', quoted for the shell,
+ dnl and then quoted again for a C string.  Separate options with spaces.
+ 
+--- emacs-28.0.90_before/nextstep/templates/Info.plist.in	2021-12-02 05:37:09.000000000 +0900
++++ emacs-28.0.90/nextstep/templates/Info.plist.in	2021-12-30 15:24:54.000000000 +0900
+@@ -659,7 +659,7 @@ along with GNU Emacs.  If not, see <http
+ 	<string>EMAx</string>
+ 	<!-- This SHOULD be a build number. -->
+ 	<key>CFBundleVersion</key>
+-	<string>9.0</string>
++	<string>@build_number@</string>
+ 	<key>NSPrincipalClass</key>
+ 	<string>EmacsApp</string>
+ 	<key>CFBundleURLTypes</key>

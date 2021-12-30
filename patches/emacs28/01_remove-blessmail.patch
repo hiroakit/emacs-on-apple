@@ -1,0 +1,28 @@
+--- a/Makefile.in	2019-01-07 23:26:06.000000000 +0900
++++ b/Makefile.in	2020-04-26 20:17:15.000000000 +0900
+@@ -420,9 +420,6 @@ VCSWITNESS = $(if $(wildcard $(srcdir)/$
+ src: Makefile
+ 	$(MAKE) -C $@ VCSWITNESS='$(VCSWITNESS)' all
+ 
+-blessmail: Makefile src
+-	$(MAKE) -C lib-src maybe-blessmail
+-
+ # We used to have one rule per */Makefile.in, but that leads to race
+ # conditions with parallel makes, so assume that the timestamp on
+ # ./Makefile represents the timestamp on all the other Makefiles.
+
+--- a/lib-src/Makefile.in	2020-04-26 20:33:58.000000000 +0900
++++ b/lib-src/Makefile.in	2020-04-26 20:33:24.000000000 +0900
+@@ -245,12 +245,6 @@ all: ${EXE_FILES} ${SCRIPTS}
+ LOADLIBES = ../lib/libgnu.a $(LIBS_SYSTEM)
+ $(EXE_FILES): ../lib/libgnu.a
+ 
+-## Only used if we need blessmail, but no harm in always defining.
+-## This makes the actual blessmail executable.
+-blessmail: $(srcdir)/../lisp/mail/blessmail.el
+-	$(AM_V_GEN)$(EMACS) $(EMACSOPT) -l $<
+-	$(AM_V_at)chmod +x $@
+-
+ ## This checks if we need to run blessmail.
+ ## Do not charge ahead and do it!  Let the installer decide.
+ need-blessmail: blessmail
