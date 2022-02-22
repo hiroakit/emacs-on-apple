@@ -196,6 +196,163 @@ build_emacs28() {
     cp -r ${srcdir}/${emacs_pkgname}-${emacs_pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
+build_gmp() {
+    declare -r pkgname="gmp"
+    declare -r pkgver="6.2.1"
+    declare -r pkgfile=${pkgname}-${pkgver}.tar.xz
+    declare -r WORK_DIR=$HOME/build
+
+    mkdir -p $WORK_DIR/src
+    pushd $WORK_DIR/src
+
+    # Get files if needed
+    if [ ! -d ${pkgname}-${pkgver} ]; then
+        # Download
+        if [ ! -e ${pkgfile} ]; then
+            curl -LO https://ftp.jaist.ac.jp/pub/GNU/${pkgname}/${pkgfile}
+        fi
+        if [ ! -e ${pkgfile}.sig ]; then
+            curl -LO https://ftp.jaist.ac.jp/pub/GNU/${pkgname}/${pkgfile}.sig
+        fi
+
+        # Verify
+        # /usr/local/MacGPG2/bin/gpg --verify ${pkgfile}.sig
+        # if [ $? -ne 0 ]; then
+        #     exit -1
+        # fi
+
+        # Unarchive
+        tar xzf ${pkgname}-${pkgver}.tar.xz
+    fi
+    pushd ${pkgname}-${pkgver}
+
+    # Build
+    ./configure --prefix=$WORK_DIR\
+                --enable-shared\
+                --disable-cxx\
+                --disable-static\
+                --build=`uname -m`-apple-darwin`uname -r`
+    make
+    make install
+    popd
+}
+
+build_nettle() {
+    declare -r pkgname="nettle"
+    declare -r pkgver="3.7.3"
+    declare -r pkgfile=${pkgname}-${pkgver}.tar.gz
+    declare -r WORK_DIR=$HOME/build
+
+    curl -LO https://ftp.jaist.ac.jp/pub/GNU/nettle/${pkgfile}
+    curl -LO https://ftp.jaist.ac.jp/pub/GNU/nettle/${pkgfile}.sig
+    
+#    /usr/local/MacGPG2/bin/gpg --verify ${pkgname}-${pkgver}.tar.gz.sig
+#    if [ $? -ne 0 ]; then
+#       exit -1
+#    fi
+    tar xzf ${pkgfile}
+    pushd ${pkgname}-${pkgver}
+
+    PKG_CONFIG_PATH=${WORK_DIR}/lib/pkgconfig    
+    ./configure --prefix=$WORK_DIR\
+                --disable-cxx\
+                --disable-openssl\
+                --disable-static\
+                --enable-mini-gmp\
+                --build=`uname -m`-apple-darwin`uname -r`
+    make
+    make install
+    make check
+    popd
+}
+
+build_gnutls() {
+    declare -r pkgname="gnutls"
+    declare -r pkgver="3.7.3"
+    declare -r pkgfile=${pkgname}-${pkgver}.tar.xz
+    declare -r WORK_DIR=$HOME/build
+
+    mkdir -p $WORK_DIR/src
+    pushd $WORK_DIR/src
+
+    # Get files if needed    
+    if [ ! -d ${pkgname}-${pkgver} ]; then
+        # Download
+        if [ ! -e ${pkgfile} ]; then
+            curl -LO https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/${pkgfile}
+        fi
+        if [ ! -e ${pkgfile}.sig ]; then
+            curl -LO https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/${pkgfile}.sig
+        fi
+
+        # Verify
+        /usr/local/MacGPG2/bin/gpg --verify ${pkgfile}.sig
+        if [ $? -ne 0 ]; then
+            exit -1
+        fi
+
+        # Unarchive
+        tar xzf ${pkgname}-${pkgver}.tar.xz
+    fi
+    pushd ${pkgname}-${pkgver}
+
+    # Cleanup files if needed
+    # if [ -e config.status ]; then
+#       make distclean
+#       exit 0
+#    fi
+
+    # Build
+    PKG_CONFIG_PATH=${WORK_DIR}/lib/pkgconfig
+    ./configure --prefix=$WORK_DIR\
+                --disable-cxx\
+                --disable-guile\
+                --without-p11-kit\
+                --with-included-libtasn1\
+                --with-included-unistring\
+                --build=`uname -m`-apple-darwin`uname -r`
+    make
+    make install
+    popd
+}
+
+build_texinfo() {
+    declare -r pkgname="texinfo"
+    declare -r pkgver="6.8"
+    declare -r pkgfile=${pkgname}-${pkgver}.tar.xz
+    declare -r WORK_DIR=$HOME/build
+
+    mkdir -p $WORK_DIR/src
+    pushd $WORK_DIR/src
+
+    # Get files if needed    
+    if [ ! -d ${pkgname}-${pkgver} ]; then
+        # Download
+        if [ ! -e ${pkgfile} ]; then
+            curl -LO https://ftp.jaist.ac.jp/pub/GNU/texinfo/${pkgfile}
+        fi
+        if [ ! -e ${pkgfile}.sig ]; then
+            curl -LO https://ftp.jaist.ac.jp/pub/GNU/texinfo/${pkgfile}.sig
+        fi
+
+        # Verify
+        # /usr/local/MacGPG2/bin/gpg --verify ${pkgfile}.sig
+        # if [ $? -ne 0 ]; then
+        #     exit -1
+        # fi
+
+        # Unarchive
+        tar xzf ${pkgname}-${pkgver}.tar.xz
+    fi
+    pushd ${pkgname}-${pkgver}
+
+    ./configure --prefix=$WORK_DIR\
+                --build=`uname -m`-apple-darwin`uname -r`
+    make
+    make install
+    popd
+}
+
 COMMAND="$1"                 # Using 1st argument as command
 BASE_PATH="$(dirname "$0")"  # Calling script location
 
@@ -219,6 +376,15 @@ case "$COMMAND" in
         ;;
     "emacs28")
         clean && build_emacs28
+        exit 0
+        ;;
+    "gnutls")
+        clean
+        rm -rf ~/build
+        build_texinfo
+        build_gmp
+        build_nettle
+        build_gnutls
         exit 0
         ;;
     *)
