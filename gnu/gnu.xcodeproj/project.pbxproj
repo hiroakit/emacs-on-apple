@@ -35,6 +35,7 @@
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
 		CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */; };
 		CBB8F2D22D8F0A4600F131B0 /* careadlinkat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */; };
+		CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D32D8F0A7100F131B0 /* cloexec.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "canonicalize-lgpl.c"; path = "../GnuEmacs/lib/canonicalize-lgpl.c"; sourceTree = SOURCE_ROOT; };
 		CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = careadlinkat.c; path = ../GnuEmacs/lib/careadlinkat.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2D32D8F0A7100F131B0 /* cloexec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = cloexec.c; path = ../GnuEmacs/lib/cloexec.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				CB53AD882D8EDF9E0028CE1E /* c-strncasecmp.c */,
 				CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */,
 				CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */,
+				CBB8F2D32D8F0A7100F131B0 /* cloexec.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */,
 				CB53AD732D8EDC650028CE1E /* get-permissions.c in Sources */,
 				CB53AD712D8EDC0F0028CE1E /* acl-internal.c in Sources */,
+				CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
 				CB53AD812D8EDEEA0028CE1E /* byteswap.c in Sources */,
 				CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */,
