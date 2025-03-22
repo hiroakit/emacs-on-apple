@@ -1,2 +1,7 @@
 src
 pkg
+
+# Xcode
+**/*.xcuserstate
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
