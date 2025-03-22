@@ -25,6 +25,7 @@
 		CB53AD792D8EDD440028CE1E /* openat-proc.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD782D8EDD440028CE1E /* openat-proc.c */; };
 		CB53AD7B2D8EDDCF0028CE1E /* binary-io.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD7A2D8EDDCF0028CE1E /* binary-io.c */; };
 		CB53AD7D2D8EDE2C0028CE1E /* fcntl.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD7C2D8EDE2C0028CE1E /* fcntl.h */; };
+		CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD7E2D8EDE950028CE1E /* boot-time.c */; };
 		CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */ = {isa = PBXBuildFile; fileRef = CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */; };
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		CB53AD782D8EDD440028CE1E /* openat-proc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "openat-proc.c"; path = "../GnuEmacs/lib/openat-proc.c"; sourceTree = SOURCE_ROOT; };
 		CB53AD7A2D8EDDCF0028CE1E /* binary-io.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "binary-io.c"; path = "../GnuEmacs/lib/binary-io.c"; sourceTree = SOURCE_ROOT; };
 		CB53AD7C2D8EDE2C0028CE1E /* fcntl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fcntl.h; path = ../GnuEmacs/lib/fcntl.h; sourceTree = SOURCE_ROOT; };
+		CB53AD7E2D8EDE950028CE1E /* boot-time.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "boot-time.c"; path = "../GnuEmacs/lib/boot-time.c"; sourceTree = SOURCE_ROOT; };
 		CB9EBB9D2D8EB973005A1036 /* libgnu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgnu.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fingerprint.h; path = ../GnuEmacs/lib/fingerprint.h; sourceTree = SOURCE_ROOT; };
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
@@ -78,6 +80,7 @@
 				CB53AD762D8EDD030028CE1E /* allocator.c */,
 				CB53AD782D8EDD440028CE1E /* openat-proc.c */,
 				CB53AD7A2D8EDDCF0028CE1E /* binary-io.c */,
+				CB53AD7E2D8EDE950028CE1E /* boot-time.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				CB53AD732D8EDC650028CE1E /* get-permissions.c in Sources */,
 				CB53AD712D8EDC0F0028CE1E /* acl-internal.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
+				CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */,
 				CB53AD7B2D8EDDCF0028CE1E /* binary-io.c in Sources */,
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
 				CB53AD752D8EDCA50028CE1E /* set-permissions.c in Sources */,
