@@ -43,6 +43,68 @@
 		CBB8F2DE2D8F0B9700F131B0 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DD2D8F0B9700F131B0 /* sha1.c */; };
 		CBB8F2E02D8F0BA600F131B0 /* sha256.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DF2D8F0BA600F131B0 /* sha256.c */; };
 		CBB8F2E22D8F0BD200F131B0 /* sha512.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E12D8F0BD200F131B0 /* sha512.c */; };
+		CBB8F2E42D8F0BF600F131B0 /* dtoastr.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E32D8F0BF600F131B0 /* dtoastr.c */; };
+		CBB8F2E62D8F0C7600F131B0 /* dtotimespec.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E52D8F0C7600F131B0 /* dtotimespec.c */; };
+		CBB8F2E82D8F0C8100F131B0 /* endian.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E72D8F0C8100F131B0 /* endian.c */; };
+		CBB8F2EA2D8F0C8900F131B0 /* euidaccess.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E92D8F0C8900F131B0 /* euidaccess.c */; };
+		CBB8F2F42D8F0CF700F131B0 /* fstatat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2F12D8F0CF700F131B0 /* fstatat.c */; };
+		CBB8F2F52D8F0CF700F131B0 /* filevercmp.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2EE2D8F0CF700F131B0 /* filevercmp.c */; };
+		CBB8F2F62D8F0CF700F131B0 /* fpending.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2EF2D8F0CF700F131B0 /* fpending.c */; };
+		CBB8F2F72D8F0CF700F131B0 /* free.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2F02D8F0CF700F131B0 /* free.c */; };
+		CBB8F2F82D8F0CF700F131B0 /* fsusage.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2F22D8F0CF700F131B0 /* fsusage.c */; };
+		CBB8F2F92D8F0CF700F131B0 /* faccessat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2EB2D8F0CF700F131B0 /* faccessat.c */; };
+		CBB8F2FA2D8F0CF700F131B0 /* file-has-acl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2EC2D8F0CF700F131B0 /* file-has-acl.c */; };
+		CBB8F2FB2D8F0CF700F131B0 /* filemode.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2ED2D8F0CF700F131B0 /* filemode.c */; };
+		CBB8F2FC2D8F0CF700F131B0 /* futimens.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2F32D8F0CF700F131B0 /* futimens.c */; };
+		CBB8F3022D8F0D1A00F131B0 /* getopt1.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2FF2D8F0D1A00F131B0 /* getopt1.c */; };
+		CBB8F3032D8F0D1A00F131B0 /* getgroups.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2FD2D8F0D1A00F131B0 /* getgroups.c */; };
+		CBB8F3042D8F0D1A00F131B0 /* getrandom.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3002D8F0D1A00F131B0 /* getrandom.c */; };
+		CBB8F3052D8F0D1A00F131B0 /* getopt.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2FE2D8F0D1A00F131B0 /* getopt.c */; };
+		CBB8F3062D8F0D1A00F131B0 /* gettime.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3012D8F0D1A00F131B0 /* gettime.c */; };
+		CBB8F30D2D8F0D6F00F131B0 /* dynarray_emplace_enlarge.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3092D8F0D6F00F131B0 /* dynarray_emplace_enlarge.c */; };
+		CBB8F30E2D8F0D6F00F131B0 /* dynarray_at_failure.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3082D8F0D6F00F131B0 /* dynarray_at_failure.c */; };
+		CBB8F30F2D8F0D6F00F131B0 /* dynarray_resize.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F30B2D8F0D6F00F131B0 /* dynarray_resize.c */; };
+		CBB8F3102D8F0D6F00F131B0 /* dynarray_finalize.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F30A2D8F0D6F00F131B0 /* dynarray_finalize.c */; };
+		CBB8F3112D8F0D6F00F131B0 /* scratch_buffer_grow.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F30C2D8F0D6F00F131B0 /* scratch_buffer_grow.c */; };
+		CBB8F3132D8F0D7900F131B0 /* scratch_buffer_grow_preserve.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3122D8F0D7900F131B0 /* scratch_buffer_grow_preserve.c */; };
+		CBB8F3152D8F0D8600F131B0 /* scratch_buffer_set_array_size.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3142D8F0D8600F131B0 /* scratch_buffer_set_array_size.c */; };
+		CBB8F3172D8F0D9800F131B0 /* group-member.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3162D8F0D9800F131B0 /* group-member.c */; };
+		CBB8F3192D8F0DA900F131B0 /* mini-gmp-gnulib.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3182D8F0DA900F131B0 /* mini-gmp-gnulib.c */; };
+		CBB8F31B2D8F0DB600F131B0 /* lstat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F31A2D8F0DB600F131B0 /* lstat.c */; };
+		CBB8F3212D8F0DD300F131B0 /* nanosleep.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F31F2D8F0DD300F131B0 /* nanosleep.c */; };
+		CBB8F3222D8F0DD300F131B0 /* nproc.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3202D8F0DD300F131B0 /* nproc.c */; };
+		CBB8F3232D8F0DD300F131B0 /* mempcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F31C2D8F0DD300F131B0 /* mempcpy.c */; };
+		CBB8F3242D8F0DD300F131B0 /* memset_explicit.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F31E2D8F0DD300F131B0 /* memset_explicit.c */; };
+		CBB8F3252D8F0DD300F131B0 /* memrchr.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F31D2D8F0DD300F131B0 /* memrchr.c */; };
+		CBB8F3272D8F0DEA00F131B0 /* nstrftime.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3262D8F0DEA00F131B0 /* nstrftime.c */; };
+		CBB8F3322D8F0E1800F131B0 /* regex.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32E2D8F0E1800F131B0 /* regex.c */; };
+		CBB8F3332D8F0E1800F131B0 /* open.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3282D8F0E1800F131B0 /* open.c */; };
+		CBB8F3342D8F0E1800F131B0 /* readlinkat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32D2D8F0E1800F131B0 /* readlinkat.c */; };
+		CBB8F3352D8F0E1800F131B0 /* qcopy-acl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32A2D8F0E1800F131B0 /* qcopy-acl.c */; };
+		CBB8F3362D8F0E1800F131B0 /* sig2str.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32F2D8F0E1800F131B0 /* sig2str.c */; };
+		CBB8F3372D8F0E1800F131B0 /* stat-time.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3312D8F0E1800F131B0 /* stat-time.c */; };
+		CBB8F3382D8F0E1800F131B0 /* pipe2.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3292D8F0E1800F131B0 /* pipe2.c */; };
+		CBB8F3392D8F0E1800F131B0 /* rawmemchr.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32B2D8F0E1800F131B0 /* rawmemchr.c */; };
+		CBB8F33A2D8F0E1800F131B0 /* readlink.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F32C2D8F0E1800F131B0 /* readlink.c */; };
+		CBB8F33B2D8F0E1800F131B0 /* sigdescr_np.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3302D8F0E1800F131B0 /* sigdescr_np.c */; };
+		CBB8F3412D8F0E3A00F131B0 /* stdc_bit_width.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F33D2D8F0E3A00F131B0 /* stdc_bit_width.c */; };
+		CBB8F3422D8F0E3A00F131B0 /* stdc_trailing_zeros.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3402D8F0E3A00F131B0 /* stdc_trailing_zeros.c */; };
+		CBB8F3432D8F0E3A00F131B0 /* stdc_count_ones.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F33E2D8F0E3A00F131B0 /* stdc_count_ones.c */; };
+		CBB8F3442D8F0E3A00F131B0 /* stdc_leading_zeros.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F33F2D8F0E3A00F131B0 /* stdc_leading_zeros.c */; };
+		CBB8F3452D8F0E3A00F131B0 /* stdbit.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F33C2D8F0E3A00F131B0 /* stdbit.c */; };
+		CBB8F34D2D8F0E6400F131B0 /* timespec.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F34A2D8F0E6400F131B0 /* timespec.c */; };
+		CBB8F34E2D8F0E6400F131B0 /* symlink.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3462D8F0E6400F131B0 /* symlink.c */; };
+		CBB8F34F2D8F0E6400F131B0 /* timespec-add.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F34B2D8F0E6400F131B0 /* timespec-add.c */; };
+		CBB8F3502D8F0E6400F131B0 /* time_rz.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3482D8F0E6400F131B0 /* time_rz.c */; };
+		CBB8F3512D8F0E6400F131B0 /* timespec-sub.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F34C2D8F0E6400F131B0 /* timespec-sub.c */; };
+		CBB8F3522D8F0E6400F131B0 /* timegm.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3492D8F0E6400F131B0 /* timegm.c */; };
+		CBB8F3532D8F0E6400F131B0 /* tempname.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3472D8F0E6400F131B0 /* tempname.c */; };
+		CBB8F3582D8F0E8200F131B0 /* u64.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3542D8F0E8200F131B0 /* u64.c */; };
+		CBB8F3592D8F0E8200F131B0 /* utimensat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3572D8F0E8200F131B0 /* utimensat.c */; };
+		CBB8F35A2D8F0E8200F131B0 /* utimens.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3562D8F0E8200F131B0 /* utimens.c */; };
+		CBB8F35B2D8F0E8200F131B0 /* unistd.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F3552D8F0E8200F131B0 /* unistd.c */; };
+		CBB8F35D2D8F0E9E00F131B0 /* openat-die.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F35C2D8F0E9E00F131B0 /* openat-die.c */; };
+		CBB8F35F2D8F0EAB00F131B0 /* save-cwd.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F35E2D8F0EAB00F131B0 /* save-cwd.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +145,68 @@
 		CBB8F2DD2D8F0B9700F131B0 /* sha1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = ../GnuEmacs/lib/sha1.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2DF2D8F0BA600F131B0 /* sha256.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha256.c; path = ../GnuEmacs/lib/sha256.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2E12D8F0BD200F131B0 /* sha512.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha512.c; path = ../GnuEmacs/lib/sha512.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2E32D8F0BF600F131B0 /* dtoastr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dtoastr.c; path = ../GnuEmacs/lib/dtoastr.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2E52D8F0C7600F131B0 /* dtotimespec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dtotimespec.c; path = /Users/hiroakit/git/temp/emacs/lib/dtotimespec.c; sourceTree = "<absolute>"; };
+		CBB8F2E72D8F0C8100F131B0 /* endian.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = endian.c; path = /Users/hiroakit/git/temp/emacs/lib/endian.c; sourceTree = "<absolute>"; };
+		CBB8F2E92D8F0C8900F131B0 /* euidaccess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = euidaccess.c; path = /Users/hiroakit/git/temp/emacs/lib/euidaccess.c; sourceTree = "<absolute>"; };
+		CBB8F2EB2D8F0CF700F131B0 /* faccessat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = faccessat.c; path = /Users/hiroakit/git/temp/emacs/lib/faccessat.c; sourceTree = "<absolute>"; };
+		CBB8F2EC2D8F0CF700F131B0 /* file-has-acl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "file-has-acl.c"; path = "/Users/hiroakit/git/temp/emacs/lib/file-has-acl.c"; sourceTree = "<absolute>"; };
+		CBB8F2ED2D8F0CF700F131B0 /* filemode.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = filemode.c; path = /Users/hiroakit/git/temp/emacs/lib/filemode.c; sourceTree = "<absolute>"; };
+		CBB8F2EE2D8F0CF700F131B0 /* filevercmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = filevercmp.c; path = /Users/hiroakit/git/temp/emacs/lib/filevercmp.c; sourceTree = "<absolute>"; };
+		CBB8F2EF2D8F0CF700F131B0 /* fpending.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fpending.c; path = /Users/hiroakit/git/temp/emacs/lib/fpending.c; sourceTree = "<absolute>"; };
+		CBB8F2F02D8F0CF700F131B0 /* free.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = free.c; path = /Users/hiroakit/git/temp/emacs/lib/free.c; sourceTree = "<absolute>"; };
+		CBB8F2F12D8F0CF700F131B0 /* fstatat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fstatat.c; path = /Users/hiroakit/git/temp/emacs/lib/fstatat.c; sourceTree = "<absolute>"; };
+		CBB8F2F22D8F0CF700F131B0 /* fsusage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fsusage.c; path = /Users/hiroakit/git/temp/emacs/lib/fsusage.c; sourceTree = "<absolute>"; };
+		CBB8F2F32D8F0CF700F131B0 /* futimens.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = futimens.c; path = /Users/hiroakit/git/temp/emacs/lib/futimens.c; sourceTree = "<absolute>"; };
+		CBB8F2FD2D8F0D1A00F131B0 /* getgroups.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = getgroups.c; path = /Users/hiroakit/git/temp/emacs/lib/getgroups.c; sourceTree = "<absolute>"; };
+		CBB8F2FE2D8F0D1A00F131B0 /* getopt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = getopt.c; path = /Users/hiroakit/git/temp/emacs/lib/getopt.c; sourceTree = "<absolute>"; };
+		CBB8F2FF2D8F0D1A00F131B0 /* getopt1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = getopt1.c; path = /Users/hiroakit/git/temp/emacs/lib/getopt1.c; sourceTree = "<absolute>"; };
+		CBB8F3002D8F0D1A00F131B0 /* getrandom.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = getrandom.c; path = /Users/hiroakit/git/temp/emacs/lib/getrandom.c; sourceTree = "<absolute>"; };
+		CBB8F3012D8F0D1A00F131B0 /* gettime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = gettime.c; path = /Users/hiroakit/git/temp/emacs/lib/gettime.c; sourceTree = "<absolute>"; };
+		CBB8F3082D8F0D6F00F131B0 /* dynarray_at_failure.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dynarray_at_failure.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/dynarray_at_failure.c; sourceTree = "<absolute>"; };
+		CBB8F3092D8F0D6F00F131B0 /* dynarray_emplace_enlarge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dynarray_emplace_enlarge.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/dynarray_emplace_enlarge.c; sourceTree = "<absolute>"; };
+		CBB8F30A2D8F0D6F00F131B0 /* dynarray_finalize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dynarray_finalize.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/dynarray_finalize.c; sourceTree = "<absolute>"; };
+		CBB8F30B2D8F0D6F00F131B0 /* dynarray_resize.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = dynarray_resize.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/dynarray_resize.c; sourceTree = "<absolute>"; };
+		CBB8F30C2D8F0D6F00F131B0 /* scratch_buffer_grow.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = scratch_buffer_grow.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/scratch_buffer_grow.c; sourceTree = "<absolute>"; };
+		CBB8F3122D8F0D7900F131B0 /* scratch_buffer_grow_preserve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = scratch_buffer_grow_preserve.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/scratch_buffer_grow_preserve.c; sourceTree = "<absolute>"; };
+		CBB8F3142D8F0D8600F131B0 /* scratch_buffer_set_array_size.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = scratch_buffer_set_array_size.c; path = /Users/hiroakit/git/temp/emacs/lib/malloc/scratch_buffer_set_array_size.c; sourceTree = "<absolute>"; };
+		CBB8F3162D8F0D9800F131B0 /* group-member.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "group-member.c"; path = "/Users/hiroakit/git/temp/emacs/lib/group-member.c"; sourceTree = "<absolute>"; };
+		CBB8F3182D8F0DA900F131B0 /* mini-gmp-gnulib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "mini-gmp-gnulib.c"; path = "/Users/hiroakit/git/temp/emacs/lib/mini-gmp-gnulib.c"; sourceTree = "<absolute>"; };
+		CBB8F31A2D8F0DB600F131B0 /* lstat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = lstat.c; path = /Users/hiroakit/git/temp/emacs/lib/lstat.c; sourceTree = "<absolute>"; };
+		CBB8F31C2D8F0DD300F131B0 /* mempcpy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mempcpy.c; path = /Users/hiroakit/git/temp/emacs/lib/mempcpy.c; sourceTree = "<absolute>"; };
+		CBB8F31D2D8F0DD300F131B0 /* memrchr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = memrchr.c; path = /Users/hiroakit/git/temp/emacs/lib/memrchr.c; sourceTree = "<absolute>"; };
+		CBB8F31E2D8F0DD300F131B0 /* memset_explicit.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = memset_explicit.c; path = /Users/hiroakit/git/temp/emacs/lib/memset_explicit.c; sourceTree = "<absolute>"; };
+		CBB8F31F2D8F0DD300F131B0 /* nanosleep.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = nanosleep.c; path = /Users/hiroakit/git/temp/emacs/lib/nanosleep.c; sourceTree = "<absolute>"; };
+		CBB8F3202D8F0DD300F131B0 /* nproc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = nproc.c; path = /Users/hiroakit/git/temp/emacs/lib/nproc.c; sourceTree = "<absolute>"; };
+		CBB8F3262D8F0DEA00F131B0 /* nstrftime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = nstrftime.c; path = /Users/hiroakit/git/temp/emacs/lib/nstrftime.c; sourceTree = "<absolute>"; };
+		CBB8F3282D8F0E1800F131B0 /* open.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = open.c; path = /Users/hiroakit/git/temp/emacs/lib/open.c; sourceTree = "<absolute>"; };
+		CBB8F3292D8F0E1800F131B0 /* pipe2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = pipe2.c; path = /Users/hiroakit/git/temp/emacs/lib/pipe2.c; sourceTree = "<absolute>"; };
+		CBB8F32A2D8F0E1800F131B0 /* qcopy-acl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "qcopy-acl.c"; path = "/Users/hiroakit/git/temp/emacs/lib/qcopy-acl.c"; sourceTree = "<absolute>"; };
+		CBB8F32B2D8F0E1800F131B0 /* rawmemchr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = rawmemchr.c; path = /Users/hiroakit/git/temp/emacs/lib/rawmemchr.c; sourceTree = "<absolute>"; };
+		CBB8F32C2D8F0E1800F131B0 /* readlink.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = readlink.c; path = /Users/hiroakit/git/temp/emacs/lib/readlink.c; sourceTree = "<absolute>"; };
+		CBB8F32D2D8F0E1800F131B0 /* readlinkat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = readlinkat.c; path = /Users/hiroakit/git/temp/emacs/lib/readlinkat.c; sourceTree = "<absolute>"; };
+		CBB8F32E2D8F0E1800F131B0 /* regex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = regex.c; path = /Users/hiroakit/git/temp/emacs/lib/regex.c; sourceTree = "<absolute>"; };
+		CBB8F32F2D8F0E1800F131B0 /* sig2str.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sig2str.c; path = /Users/hiroakit/git/temp/emacs/lib/sig2str.c; sourceTree = "<absolute>"; };
+		CBB8F3302D8F0E1800F131B0 /* sigdescr_np.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sigdescr_np.c; path = /Users/hiroakit/git/temp/emacs/lib/sigdescr_np.c; sourceTree = "<absolute>"; };
+		CBB8F3312D8F0E1800F131B0 /* stat-time.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "stat-time.c"; path = "/Users/hiroakit/git/temp/emacs/lib/stat-time.c"; sourceTree = "<absolute>"; };
+		CBB8F33C2D8F0E3A00F131B0 /* stdbit.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stdbit.c; path = /Users/hiroakit/git/temp/emacs/lib/stdbit.c; sourceTree = "<absolute>"; };
+		CBB8F33D2D8F0E3A00F131B0 /* stdc_bit_width.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stdc_bit_width.c; path = /Users/hiroakit/git/temp/emacs/lib/stdc_bit_width.c; sourceTree = "<absolute>"; };
+		CBB8F33E2D8F0E3A00F131B0 /* stdc_count_ones.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stdc_count_ones.c; path = /Users/hiroakit/git/temp/emacs/lib/stdc_count_ones.c; sourceTree = "<absolute>"; };
+		CBB8F33F2D8F0E3A00F131B0 /* stdc_leading_zeros.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stdc_leading_zeros.c; path = /Users/hiroakit/git/temp/emacs/lib/stdc_leading_zeros.c; sourceTree = "<absolute>"; };
+		CBB8F3402D8F0E3A00F131B0 /* stdc_trailing_zeros.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stdc_trailing_zeros.c; path = /Users/hiroakit/git/temp/emacs/lib/stdc_trailing_zeros.c; sourceTree = "<absolute>"; };
+		CBB8F3462D8F0E6400F131B0 /* symlink.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = symlink.c; path = /Users/hiroakit/git/temp/emacs/lib/symlink.c; sourceTree = "<absolute>"; };
+		CBB8F3472D8F0E6400F131B0 /* tempname.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = tempname.c; path = /Users/hiroakit/git/temp/emacs/lib/tempname.c; sourceTree = "<absolute>"; };
+		CBB8F3482D8F0E6400F131B0 /* time_rz.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = time_rz.c; path = /Users/hiroakit/git/temp/emacs/lib/time_rz.c; sourceTree = "<absolute>"; };
+		CBB8F3492D8F0E6400F131B0 /* timegm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = timegm.c; path = /Users/hiroakit/git/temp/emacs/lib/timegm.c; sourceTree = "<absolute>"; };
+		CBB8F34A2D8F0E6400F131B0 /* timespec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = timespec.c; path = /Users/hiroakit/git/temp/emacs/lib/timespec.c; sourceTree = "<absolute>"; };
+		CBB8F34B2D8F0E6400F131B0 /* timespec-add.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "timespec-add.c"; path = "/Users/hiroakit/git/temp/emacs/lib/timespec-add.c"; sourceTree = "<absolute>"; };
+		CBB8F34C2D8F0E6400F131B0 /* timespec-sub.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "timespec-sub.c"; path = "/Users/hiroakit/git/temp/emacs/lib/timespec-sub.c"; sourceTree = "<absolute>"; };
+		CBB8F3542D8F0E8200F131B0 /* u64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = u64.c; path = /Users/hiroakit/git/temp/emacs/lib/u64.c; sourceTree = "<absolute>"; };
+		CBB8F3552D8F0E8200F131B0 /* unistd.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = unistd.c; path = /Users/hiroakit/git/temp/emacs/lib/unistd.c; sourceTree = "<absolute>"; };
+		CBB8F3562D8F0E8200F131B0 /* utimens.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = utimens.c; path = /Users/hiroakit/git/temp/emacs/lib/utimens.c; sourceTree = "<absolute>"; };
+		CBB8F3572D8F0E8200F131B0 /* utimensat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = utimensat.c; path = /Users/hiroakit/git/temp/emacs/lib/utimensat.c; sourceTree = "<absolute>"; };
+		CBB8F35C2D8F0E9E00F131B0 /* openat-die.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "openat-die.c"; path = "/Users/hiroakit/git/temp/emacs/lib/openat-die.c"; sourceTree = "<absolute>"; };
+		CBB8F35E2D8F0EAB00F131B0 /* save-cwd.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "save-cwd.c"; path = "/Users/hiroakit/git/temp/emacs/lib/save-cwd.c"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +249,62 @@
 				CBB8F2DD2D8F0B9700F131B0 /* sha1.c */,
 				CBB8F2DF2D8F0BA600F131B0 /* sha256.c */,
 				CBB8F2E12D8F0BD200F131B0 /* sha512.c */,
+				CBB8F2E32D8F0BF600F131B0 /* dtoastr.c */,
+				CBB8F2E52D8F0C7600F131B0 /* dtotimespec.c */,
+				CBB8F2E72D8F0C8100F131B0 /* endian.c */,
+				CBB8F2E92D8F0C8900F131B0 /* euidaccess.c */,
+				CBB8F2EB2D8F0CF700F131B0 /* faccessat.c */,
+				CBB8F2EC2D8F0CF700F131B0 /* file-has-acl.c */,
+				CBB8F2ED2D8F0CF700F131B0 /* filemode.c */,
+				CBB8F2EE2D8F0CF700F131B0 /* filevercmp.c */,
+				CBB8F2EF2D8F0CF700F131B0 /* fpending.c */,
+				CBB8F2F02D8F0CF700F131B0 /* free.c */,
+				CBB8F2F12D8F0CF700F131B0 /* fstatat.c */,
+				CBB8F2F22D8F0CF700F131B0 /* fsusage.c */,
+				CBB8F2F32D8F0CF700F131B0 /* futimens.c */,
+				CBB8F2FD2D8F0D1A00F131B0 /* getgroups.c */,
+				CBB8F2FE2D8F0D1A00F131B0 /* getopt.c */,
+				CBB8F2FF2D8F0D1A00F131B0 /* getopt1.c */,
+				CBB8F3002D8F0D1A00F131B0 /* getrandom.c */,
+				CBB8F3012D8F0D1A00F131B0 /* gettime.c */,
+				CBB8F3072D8F0D4700F131B0 /* malloc */,
+				CBB8F3162D8F0D9800F131B0 /* group-member.c */,
+				CBB8F3182D8F0DA900F131B0 /* mini-gmp-gnulib.c */,
+				CBB8F31A2D8F0DB600F131B0 /* lstat.c */,
+				CBB8F31C2D8F0DD300F131B0 /* mempcpy.c */,
+				CBB8F31D2D8F0DD300F131B0 /* memrchr.c */,
+				CBB8F31E2D8F0DD300F131B0 /* memset_explicit.c */,
+				CBB8F31F2D8F0DD300F131B0 /* nanosleep.c */,
+				CBB8F3202D8F0DD300F131B0 /* nproc.c */,
+				CBB8F3262D8F0DEA00F131B0 /* nstrftime.c */,
+				CBB8F3282D8F0E1800F131B0 /* open.c */,
+				CBB8F3292D8F0E1800F131B0 /* pipe2.c */,
+				CBB8F32A2D8F0E1800F131B0 /* qcopy-acl.c */,
+				CBB8F32B2D8F0E1800F131B0 /* rawmemchr.c */,
+				CBB8F32C2D8F0E1800F131B0 /* readlink.c */,
+				CBB8F32D2D8F0E1800F131B0 /* readlinkat.c */,
+				CBB8F32E2D8F0E1800F131B0 /* regex.c */,
+				CBB8F32F2D8F0E1800F131B0 /* sig2str.c */,
+				CBB8F3302D8F0E1800F131B0 /* sigdescr_np.c */,
+				CBB8F3312D8F0E1800F131B0 /* stat-time.c */,
+				CBB8F33C2D8F0E3A00F131B0 /* stdbit.c */,
+				CBB8F33D2D8F0E3A00F131B0 /* stdc_bit_width.c */,
+				CBB8F33E2D8F0E3A00F131B0 /* stdc_count_ones.c */,
+				CBB8F33F2D8F0E3A00F131B0 /* stdc_leading_zeros.c */,
+				CBB8F3402D8F0E3A00F131B0 /* stdc_trailing_zeros.c */,
+				CBB8F3462D8F0E6400F131B0 /* symlink.c */,
+				CBB8F3472D8F0E6400F131B0 /* tempname.c */,
+				CBB8F3482D8F0E6400F131B0 /* time_rz.c */,
+				CBB8F3492D8F0E6400F131B0 /* timegm.c */,
+				CBB8F34A2D8F0E6400F131B0 /* timespec.c */,
+				CBB8F34B2D8F0E6400F131B0 /* timespec-add.c */,
+				CBB8F34C2D8F0E6400F131B0 /* timespec-sub.c */,
+				CBB8F3542D8F0E8200F131B0 /* u64.c */,
+				CBB8F3552D8F0E8200F131B0 /* unistd.c */,
+				CBB8F3562D8F0E8200F131B0 /* utimens.c */,
+				CBB8F3572D8F0E8200F131B0 /* utimensat.c */,
+				CBB8F35C2D8F0E9E00F131B0 /* openat-die.c */,
+				CBB8F35E2D8F0EAB00F131B0 /* save-cwd.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -161,6 +341,20 @@
 				CB9EBB9D2D8EB973005A1036 /* libgnu.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CBB8F3072D8F0D4700F131B0 /* malloc */ = {
+			isa = PBXGroup;
+			children = (
+				CBB8F3082D8F0D6F00F131B0 /* dynarray_at_failure.c */,
+				CBB8F3092D8F0D6F00F131B0 /* dynarray_emplace_enlarge.c */,
+				CBB8F30A2D8F0D6F00F131B0 /* dynarray_finalize.c */,
+				CBB8F30B2D8F0D6F00F131B0 /* dynarray_resize.c */,
+				CBB8F30C2D8F0D6F00F131B0 /* scratch_buffer_grow.c */,
+				CBB8F3122D8F0D7900F131B0 /* scratch_buffer_grow_preserve.c */,
+				CBB8F3142D8F0D8600F131B0 /* scratch_buffer_set_array_size.c */,
+			);
+			path = malloc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,32 +437,94 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBB8F3212D8F0DD300F131B0 /* nanosleep.c in Sources */,
+				CBB8F3222D8F0DD300F131B0 /* nproc.c in Sources */,
+				CBB8F3582D8F0E8200F131B0 /* u64.c in Sources */,
+				CBB8F3592D8F0E8200F131B0 /* utimensat.c in Sources */,
+				CBB8F35A2D8F0E8200F131B0 /* utimens.c in Sources */,
+				CBB8F35B2D8F0E8200F131B0 /* unistd.c in Sources */,
+				CBB8F3232D8F0DD300F131B0 /* mempcpy.c in Sources */,
+				CBB8F3242D8F0DD300F131B0 /* memset_explicit.c in Sources */,
+				CBB8F3252D8F0DD300F131B0 /* memrchr.c in Sources */,
 				CB53AD6F2D8EDBE00028CE1E /* acl-errno-valid.c in Sources */,
 				CB53AD852D8EDF3A0028CE1E /* c-ctype.c in Sources */,
 				CBB8F2D22D8F0A4600F131B0 /* careadlinkat.c in Sources */,
+				CBB8F2E82D8F0C8100F131B0 /* endian.c in Sources */,
 				CB53AD772D8EDD030028CE1E /* allocator.c in Sources */,
+				CBB8F30D2D8F0D6F00F131B0 /* dynarray_emplace_enlarge.c in Sources */,
+				CBB8F30E2D8F0D6F00F131B0 /* dynarray_at_failure.c in Sources */,
+				CBB8F30F2D8F0D6F00F131B0 /* dynarray_resize.c in Sources */,
+				CBB8F3102D8F0D6F00F131B0 /* dynarray_finalize.c in Sources */,
+				CBB8F3172D8F0D9800F131B0 /* group-member.c in Sources */,
+				CBB8F3112D8F0D6F00F131B0 /* scratch_buffer_grow.c in Sources */,
 				CB53AD892D8EDF9E0028CE1E /* c-strncasecmp.c in Sources */,
+				CBB8F2EA2D8F0C8900F131B0 /* euidaccess.c in Sources */,
 				CB53AD792D8EDD440028CE1E /* openat-proc.c in Sources */,
 				CBB8F2DC2D8F0B6E00F131B0 /* md5.c in Sources */,
 				CB53AD5F2D8ED9850028CE1E /* mktime.c in Sources */,
 				CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */,
+				CBB8F2F42D8F0CF700F131B0 /* fstatat.c in Sources */,
+				CBB8F2F52D8F0CF700F131B0 /* filevercmp.c in Sources */,
+				CBB8F3152D8F0D8600F131B0 /* scratch_buffer_set_array_size.c in Sources */,
+				CBB8F2F62D8F0CF700F131B0 /* fpending.c in Sources */,
+				CBB8F2F72D8F0CF700F131B0 /* free.c in Sources */,
+				CBB8F2F82D8F0CF700F131B0 /* fsusage.c in Sources */,
+				CBB8F2F92D8F0CF700F131B0 /* faccessat.c in Sources */,
+				CBB8F2FA2D8F0CF700F131B0 /* file-has-acl.c in Sources */,
+				CBB8F2FB2D8F0CF700F131B0 /* filemode.c in Sources */,
+				CBB8F2FC2D8F0CF700F131B0 /* futimens.c in Sources */,
 				CB53AD732D8EDC650028CE1E /* get-permissions.c in Sources */,
 				CB53AD712D8EDC0F0028CE1E /* acl-internal.c in Sources */,
+				CBB8F3132D8F0D7900F131B0 /* scratch_buffer_grow_preserve.c in Sources */,
+				CBB8F3322D8F0E1800F131B0 /* regex.c in Sources */,
+				CBB8F3332D8F0E1800F131B0 /* open.c in Sources */,
+				CBB8F3342D8F0E1800F131B0 /* readlinkat.c in Sources */,
+				CBB8F3352D8F0E1800F131B0 /* qcopy-acl.c in Sources */,
+				CBB8F34D2D8F0E6400F131B0 /* timespec.c in Sources */,
+				CBB8F34E2D8F0E6400F131B0 /* symlink.c in Sources */,
+				CBB8F35F2D8F0EAB00F131B0 /* save-cwd.c in Sources */,
+				CBB8F34F2D8F0E6400F131B0 /* timespec-add.c in Sources */,
+				CBB8F3502D8F0E6400F131B0 /* time_rz.c in Sources */,
+				CBB8F3512D8F0E6400F131B0 /* timespec-sub.c in Sources */,
+				CBB8F3522D8F0E6400F131B0 /* timegm.c in Sources */,
+				CBB8F3532D8F0E6400F131B0 /* tempname.c in Sources */,
+				CBB8F3412D8F0E3A00F131B0 /* stdc_bit_width.c in Sources */,
+				CBB8F3422D8F0E3A00F131B0 /* stdc_trailing_zeros.c in Sources */,
+				CBB8F3432D8F0E3A00F131B0 /* stdc_count_ones.c in Sources */,
+				CBB8F3442D8F0E3A00F131B0 /* stdc_leading_zeros.c in Sources */,
+				CBB8F3452D8F0E3A00F131B0 /* stdbit.c in Sources */,
+				CBB8F3362D8F0E1800F131B0 /* sig2str.c in Sources */,
+				CBB8F3372D8F0E1800F131B0 /* stat-time.c in Sources */,
+				CBB8F3382D8F0E1800F131B0 /* pipe2.c in Sources */,
+				CBB8F3392D8F0E1800F131B0 /* rawmemchr.c in Sources */,
+				CBB8F33A2D8F0E1800F131B0 /* readlink.c in Sources */,
+				CBB8F35D2D8F0E9E00F131B0 /* openat-die.c in Sources */,
+				CBB8F33B2D8F0E1800F131B0 /* sigdescr_np.c in Sources */,
 				CBB8F2DA2D8F0B5200F131B0 /* md5-stream.c in Sources */,
+				CBB8F3272D8F0DEA00F131B0 /* nstrftime.c in Sources */,
 				CBB8F2DE2D8F0B9700F131B0 /* sha1.c in Sources */,
 				CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */,
 				CBB8F2D82D8F0B1300F131B0 /* copy-file-range.c in Sources */,
 				CBB8F2E02D8F0BA600F131B0 /* sha256.c in Sources */,
+				CBB8F2E42D8F0BF600F131B0 /* dtoastr.c in Sources */,
+				CBB8F3192D8F0DA900F131B0 /* mini-gmp-gnulib.c in Sources */,
+				CBB8F3022D8F0D1A00F131B0 /* getopt1.c in Sources */,
+				CBB8F3032D8F0D1A00F131B0 /* getgroups.c in Sources */,
+				CBB8F3042D8F0D1A00F131B0 /* getrandom.c in Sources */,
+				CBB8F3052D8F0D1A00F131B0 /* getopt.c in Sources */,
+				CBB8F3062D8F0D1A00F131B0 /* gettime.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
 				CB53AD812D8EDEEA0028CE1E /* byteswap.c in Sources */,
 				CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */,
 				CBB8F2D62D8F0A9900F131B0 /* close-stream.c in Sources */,
 				CB53AD7B2D8EDDCF0028CE1E /* binary-io.c in Sources */,
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
+				CBB8F31B2D8F0DB600F131B0 /* lstat.c in Sources */,
 				CB53AD872D8EDF750028CE1E /* c-strcasecmp.c in Sources */,
 				CBB8F2E22D8F0BD200F131B0 /* sha512.c in Sources */,
 				CB53AD752D8EDCA50028CE1E /* set-permissions.c in Sources */,
 				CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */,
+				CBB8F2E62D8F0C7600F131B0 /* dtotimespec.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
