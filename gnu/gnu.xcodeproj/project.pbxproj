@@ -36,6 +36,7 @@
 		CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */; };
 		CBB8F2D22D8F0A4600F131B0 /* careadlinkat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */; };
 		CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D32D8F0A7100F131B0 /* cloexec.c */; };
+		CBB8F2D62D8F0A9900F131B0 /* close-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D52D8F0A9900F131B0 /* close-stream.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "canonicalize-lgpl.c"; path = "../GnuEmacs/lib/canonicalize-lgpl.c"; sourceTree = SOURCE_ROOT; };
 		CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = careadlinkat.c; path = ../GnuEmacs/lib/careadlinkat.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2D32D8F0A7100F131B0 /* cloexec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = cloexec.c; path = ../GnuEmacs/lib/cloexec.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2D52D8F0A9900F131B0 /* close-stream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "close-stream.c"; path = "../GnuEmacs/lib/close-stream.c"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */,
 				CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */,
 				CBB8F2D32D8F0A7100F131B0 /* cloexec.c */,
+				CBB8F2D52D8F0A9900F131B0 /* close-stream.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
 				CB53AD812D8EDEEA0028CE1E /* byteswap.c in Sources */,
 				CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */,
+				CBB8F2D62D8F0A9900F131B0 /* close-stream.c in Sources */,
 				CB53AD7B2D8EDDCF0028CE1E /* binary-io.c in Sources */,
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
 				CB53AD872D8EDF750028CE1E /* c-strcasecmp.c in Sources */,
