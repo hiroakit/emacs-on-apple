@@ -39,6 +39,7 @@
 		CBB8F2D62D8F0A9900F131B0 /* close-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D52D8F0A9900F131B0 /* close-stream.c */; };
 		CBB8F2D82D8F0B1300F131B0 /* copy-file-range.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */; };
 		CBB8F2DA2D8F0B5200F131B0 /* md5-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */; };
+		CBB8F2DC2D8F0B6E00F131B0 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DB2D8F0B6E00F131B0 /* md5.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		CBB8F2D52D8F0A9900F131B0 /* close-stream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "close-stream.c"; path = "../GnuEmacs/lib/close-stream.c"; sourceTree = SOURCE_ROOT; };
 		CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "copy-file-range.c"; path = "../GnuEmacs/lib/copy-file-range.c"; sourceTree = SOURCE_ROOT; };
 		CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "md5-stream.c"; path = "../GnuEmacs/lib/md5-stream.c"; sourceTree = SOURCE_ROOT; };
+		CBB8F2DB2D8F0B6E00F131B0 /* md5.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = md5.c; path = ../GnuEmacs/lib/md5.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				CBB8F2D52D8F0A9900F131B0 /* close-stream.c */,
 				CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */,
 				CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */,
+				CBB8F2DB2D8F0B6E00F131B0 /* md5.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				CB53AD772D8EDD030028CE1E /* allocator.c in Sources */,
 				CB53AD892D8EDF9E0028CE1E /* c-strncasecmp.c in Sources */,
 				CB53AD792D8EDD440028CE1E /* openat-proc.c in Sources */,
+				CBB8F2DC2D8F0B6E00F131B0 /* md5.c in Sources */,
 				CB53AD5F2D8ED9850028CE1E /* mktime.c in Sources */,
 				CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */,
 				CB53AD732D8EDC650028CE1E /* get-permissions.c in Sources */,
