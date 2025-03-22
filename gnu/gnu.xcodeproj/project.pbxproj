@@ -11,6 +11,12 @@
 		CB53AD572D8ED5390028CE1E /* acl-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD562D8ED5390028CE1E /* acl-internal.h */; };
 		CB53AD592D8ED5660028CE1E /* acl.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD582D8ED5660028CE1E /* acl.h */; };
 		CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD5A2D8ED6090028CE1E /* memmem.c */; };
+		CB53AD5F2D8ED9850028CE1E /* mktime.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD5E2D8ED8FD0028CE1E /* mktime.c */; };
+		CB53AD612D8ED9C60028CE1E /* libc-config.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD602D8ED9C60028CE1E /* libc-config.h */; };
+		CB53AD632D8EDA0A0028CE1E /* cdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD622D8EDA0A0028CE1E /* cdefs.h */; };
+		CB53AD652D8EDAEB0028CE1E /* stdckdint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD642D8EDAEB0028CE1E /* stdckdint.h */; };
+		CB53AD672D8EDB1F0028CE1E /* intprops.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD662D8EDB1F0028CE1E /* intprops.h */; };
+		CB53AD692D8EDB2F0028CE1E /* verify.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD682D8EDB2F0028CE1E /* verify.h */; };
 		CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */ = {isa = PBXBuildFile; fileRef = CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */; };
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
 /* End PBXBuildFile section */
@@ -20,6 +26,12 @@
 		CB53AD562D8ED5390028CE1E /* acl-internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "acl-internal.h"; path = "../GnuEmacs/lib/acl-internal.h"; sourceTree = SOURCE_ROOT; };
 		CB53AD582D8ED5660028CE1E /* acl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = acl.h; path = ../GnuEmacs/lib/acl.h; sourceTree = SOURCE_ROOT; };
 		CB53AD5A2D8ED6090028CE1E /* memmem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = memmem.c; path = ../GnuEmacs/lib/memmem.c; sourceTree = SOURCE_ROOT; };
+		CB53AD5E2D8ED8FD0028CE1E /* mktime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mktime.c; path = ../GnuEmacs/lib/mktime.c; sourceTree = SOURCE_ROOT; };
+		CB53AD602D8ED9C60028CE1E /* libc-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "libc-config.h"; path = "../GnuEmacs/lib/libc-config.h"; sourceTree = SOURCE_ROOT; };
+		CB53AD622D8EDA0A0028CE1E /* cdefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = cdefs.h; path = ../GnuEmacs/lib/cdefs.h; sourceTree = SOURCE_ROOT; };
+		CB53AD642D8EDAEB0028CE1E /* stdckdint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stdckdint.h; path = ../GnuEmacs/lib/stdckdint.h; sourceTree = SOURCE_ROOT; };
+		CB53AD662D8EDB1F0028CE1E /* intprops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = intprops.h; path = ../GnuEmacs/lib/intprops.h; sourceTree = SOURCE_ROOT; };
+		CB53AD682D8EDB2F0028CE1E /* verify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = verify.h; path = ../GnuEmacs/lib/verify.h; sourceTree = SOURCE_ROOT; };
 		CB9EBB9D2D8EB973005A1036 /* libgnu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgnu.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fingerprint.h; path = ../GnuEmacs/lib/fingerprint.h; sourceTree = SOURCE_ROOT; };
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
@@ -45,6 +57,12 @@
 				CB53AD582D8ED5660028CE1E /* acl.h */,
 				CB53AD542D8ED3440028CE1E /* acl_entries.c */,
 				CB53AD5A2D8ED6090028CE1E /* memmem.c */,
+				CB53AD602D8ED9C60028CE1E /* libc-config.h */,
+				CB53AD622D8EDA0A0028CE1E /* cdefs.h */,
+				CB53AD642D8EDAEB0028CE1E /* stdckdint.h */,
+				CB53AD662D8EDB1F0028CE1E /* intprops.h */,
+				CB53AD682D8EDB2F0028CE1E /* verify.h */,
+				CB53AD5E2D8ED8FD0028CE1E /* mktime.c */,
 				CB9EBB9E2D8EB973005A1036 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,9 +82,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB53AD612D8ED9C60028CE1E /* libc-config.h in Headers */,
+				CB53AD632D8EDA0A0028CE1E /* cdefs.h in Headers */,
 				CB53AD592D8ED5660028CE1E /* acl.h in Headers */,
+				CB53AD692D8EDB2F0028CE1E /* verify.h in Headers */,
 				CB53AD572D8ED5390028CE1E /* acl-internal.h in Headers */,
 				CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */,
+				CB53AD652D8EDAEB0028CE1E /* stdckdint.h in Headers */,
+				CB53AD672D8EDB1F0028CE1E /* intprops.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB53AD5F2D8ED9850028CE1E /* mktime.c in Sources */,
 				CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
