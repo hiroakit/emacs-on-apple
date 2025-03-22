@@ -33,6 +33,7 @@
 		CB53AD892D8EDF9E0028CE1E /* c-strncasecmp.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD882D8EDF9E0028CE1E /* c-strncasecmp.c */; };
 		CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */ = {isa = PBXBuildFile; fileRef = CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */; };
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
+		CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		CB9EBB9D2D8EB973005A1036 /* libgnu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgnu.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fingerprint.h; path = ../GnuEmacs/lib/fingerprint.h; sourceTree = SOURCE_ROOT; };
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "canonicalize-lgpl.c"; path = "../GnuEmacs/lib/canonicalize-lgpl.c"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				CB53AD842D8EDF3A0028CE1E /* c-ctype.c */,
 				CB53AD862D8EDF750028CE1E /* c-strcasecmp.c */,
 				CB53AD882D8EDF9E0028CE1E /* c-strncasecmp.c */,
+				CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
 				CB53AD872D8EDF750028CE1E /* c-strcasecmp.c in Sources */,
 				CB53AD752D8EDCA50028CE1E /* set-permissions.c in Sources */,
+				CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,10 +357,14 @@
 		CB9EBBA22D8EB973005A1036 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KCACRD7592;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = ../GnuEmacs/src;
+				HEADER_SEARCH_PATHS = (
+					../GnuEmacs/lib,
+					../GnuEmacs/src,
+				);
 				OTHER_CFLAGS = "-H";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -366,10 +374,14 @@
 		CB9EBBA32D8EB973005A1036 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KCACRD7592;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = ../GnuEmacs/src;
+				HEADER_SEARCH_PATHS = (
+					../GnuEmacs/lib,
+					../GnuEmacs/src,
+				);
 				OTHER_CFLAGS = "-H";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
