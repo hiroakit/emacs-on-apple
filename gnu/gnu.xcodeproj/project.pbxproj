@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */ = {isa = PBXBuildFile; fileRef = CB53AD542D8ED3440028CE1E /* acl_entries.c */; };
+		CB53AD572D8ED5390028CE1E /* acl-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD562D8ED5390028CE1E /* acl-internal.h */; };
+		CB53AD592D8ED5660028CE1E /* acl.h in Headers */ = {isa = PBXBuildFile; fileRef = CB53AD582D8ED5660028CE1E /* acl.h */; };
 		CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */ = {isa = PBXBuildFile; fileRef = CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */; };
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CB53AD542D8ED3440028CE1E /* acl_entries.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = acl_entries.c; path = ../GnuEmacs/lib/acl_entries.c; sourceTree = SOURCE_ROOT; };
+		CB53AD562D8ED5390028CE1E /* acl-internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "acl-internal.h"; path = "../GnuEmacs/lib/acl-internal.h"; sourceTree = SOURCE_ROOT; };
+		CB53AD582D8ED5660028CE1E /* acl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = acl.h; path = ../GnuEmacs/lib/acl.h; sourceTree = SOURCE_ROOT; };
 		CB9EBB9D2D8EB973005A1036 /* libgnu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgnu.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fingerprint.h; path = ../GnuEmacs/lib/fingerprint.h; sourceTree = SOURCE_ROOT; };
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
@@ -33,6 +39,9 @@
 			children = (
 				CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */,
 				CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */,
+				CB53AD562D8ED5390028CE1E /* acl-internal.h */,
+				CB53AD582D8ED5660028CE1E /* acl.h */,
+				CB53AD542D8ED3440028CE1E /* acl_entries.c */,
 				CB9EBB9E2D8EB973005A1036 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +61,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB53AD592D8ED5660028CE1E /* acl.h in Headers */,
+				CB53AD572D8ED5390028CE1E /* acl-internal.h in Headers */,
 				CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
+				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
