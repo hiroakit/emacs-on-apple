@@ -38,6 +38,7 @@
 		CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D32D8F0A7100F131B0 /* cloexec.c */; };
 		CBB8F2D62D8F0A9900F131B0 /* close-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D52D8F0A9900F131B0 /* close-stream.c */; };
 		CBB8F2D82D8F0B1300F131B0 /* copy-file-range.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */; };
+		CBB8F2DA2D8F0B5200F131B0 /* md5-stream.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		CBB8F2D32D8F0A7100F131B0 /* cloexec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = cloexec.c; path = ../GnuEmacs/lib/cloexec.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2D52D8F0A9900F131B0 /* close-stream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "close-stream.c"; path = "../GnuEmacs/lib/close-stream.c"; sourceTree = SOURCE_ROOT; };
 		CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "copy-file-range.c"; path = "../GnuEmacs/lib/copy-file-range.c"; sourceTree = SOURCE_ROOT; };
+		CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "md5-stream.c"; path = "../GnuEmacs/lib/md5-stream.c"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				CBB8F2D32D8F0A7100F131B0 /* cloexec.c */,
 				CBB8F2D52D8F0A9900F131B0 /* close-stream.c */,
 				CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */,
+				CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				CB53AD5B2D8ED6090028CE1E /* memmem.c in Sources */,
 				CB53AD732D8EDC650028CE1E /* get-permissions.c in Sources */,
 				CB53AD712D8EDC0F0028CE1E /* acl-internal.c in Sources */,
+				CBB8F2DA2D8F0B5200F131B0 /* md5-stream.c in Sources */,
 				CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */,
 				CBB8F2D82D8F0B1300F131B0 /* copy-file-range.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
