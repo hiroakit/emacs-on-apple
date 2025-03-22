@@ -1,0 +1,3 @@
+[submodule "GnuEmacs"]
+	path = GnuEmacs
+	url = git://git.savannah.gnu.org/emacs.git
