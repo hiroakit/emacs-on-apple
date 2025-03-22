@@ -48,21 +48,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CB9EBB942D8EB973005A1036 = {
+		CB53AD6A2D8EDB830028CE1E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */,
+				CB53AD542D8ED3440028CE1E /* acl_entries.c */,
+				CB53AD5A2D8ED6090028CE1E /* memmem.c */,
+				CB53AD5E2D8ED8FD0028CE1E /* mktime.c */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		CB53AD6B2D8EDB920028CE1E /* Headers */ = {
 			isa = PBXGroup;
 			children = (
 				CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */,
-				CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */,
 				CB53AD562D8ED5390028CE1E /* acl-internal.h */,
 				CB53AD582D8ED5660028CE1E /* acl.h */,
-				CB53AD542D8ED3440028CE1E /* acl_entries.c */,
-				CB53AD5A2D8ED6090028CE1E /* memmem.c */,
 				CB53AD602D8ED9C60028CE1E /* libc-config.h */,
 				CB53AD622D8EDA0A0028CE1E /* cdefs.h */,
 				CB53AD642D8EDAEB0028CE1E /* stdckdint.h */,
 				CB53AD662D8EDB1F0028CE1E /* intprops.h */,
 				CB53AD682D8EDB2F0028CE1E /* verify.h */,
-				CB53AD5E2D8ED8FD0028CE1E /* mktime.c */,
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		CB9EBB942D8EB973005A1036 = {
+			isa = PBXGroup;
+			children = (
+				CB53AD6B2D8EDB920028CE1E /* Headers */,
+				CB53AD6A2D8EDB830028CE1E /* Sources */,
 				CB9EBB9E2D8EB973005A1036 /* Products */,
 			);
 			sourceTree = "<group>";
