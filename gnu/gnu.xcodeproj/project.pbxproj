@@ -34,6 +34,7 @@
 		CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */ = {isa = PBXBuildFile; fileRef = CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */; };
 		CB9EBBB82D8EBB6E005A1036 /* fingerprint.h in Headers */ = {isa = PBXBuildFile; fileRef = CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */; };
 		CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */; };
+		CBB8F2D22D8F0A4600F131B0 /* careadlinkat.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		CB9EBBB52D8EBB6E005A1036 /* fingerprint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fingerprint.h; path = ../GnuEmacs/lib/fingerprint.h; sourceTree = SOURCE_ROOT; };
 		CB9EBBB62D8EBB6E005A1036 /* fingerprint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fingerprint.c; path = ../GnuEmacs/lib/fingerprint.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "canonicalize-lgpl.c"; path = "../GnuEmacs/lib/canonicalize-lgpl.c"; sourceTree = SOURCE_ROOT; };
+		CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = careadlinkat.c; path = ../GnuEmacs/lib/careadlinkat.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				CB53AD862D8EDF750028CE1E /* c-strcasecmp.c */,
 				CB53AD882D8EDF9E0028CE1E /* c-strncasecmp.c */,
 				CBB8F2CD2D8F072300F131B0 /* canonicalize-lgpl.c */,
+				CBB8F2D12D8F0A4600F131B0 /* careadlinkat.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 			files = (
 				CB53AD6F2D8EDBE00028CE1E /* acl-errno-valid.c in Sources */,
 				CB53AD852D8EDF3A0028CE1E /* c-ctype.c in Sources */,
+				CBB8F2D22D8F0A4600F131B0 /* careadlinkat.c in Sources */,
 				CB53AD772D8EDD030028CE1E /* allocator.c in Sources */,
 				CB53AD892D8EDF9E0028CE1E /* c-strncasecmp.c in Sources */,
 				CB53AD792D8EDD440028CE1E /* openat-proc.c in Sources */,
