@@ -42,6 +42,7 @@
 		CBB8F2DC2D8F0B6E00F131B0 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DB2D8F0B6E00F131B0 /* md5.c */; };
 		CBB8F2DE2D8F0B9700F131B0 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DD2D8F0B9700F131B0 /* sha1.c */; };
 		CBB8F2E02D8F0BA600F131B0 /* sha256.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2DF2D8F0BA600F131B0 /* sha256.c */; };
+		CBB8F2E22D8F0BD200F131B0 /* sha512.c in Sources */ = {isa = PBXBuildFile; fileRef = CBB8F2E12D8F0BD200F131B0 /* sha512.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +82,7 @@
 		CBB8F2DB2D8F0B6E00F131B0 /* md5.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = md5.c; path = ../GnuEmacs/lib/md5.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2DD2D8F0B9700F131B0 /* sha1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = ../GnuEmacs/lib/sha1.c; sourceTree = SOURCE_ROOT; };
 		CBB8F2DF2D8F0BA600F131B0 /* sha256.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha256.c; path = ../GnuEmacs/lib/sha256.c; sourceTree = SOURCE_ROOT; };
+		CBB8F2E12D8F0BD200F131B0 /* sha512.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sha512.c; path = ../GnuEmacs/lib/sha512.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				CBB8F2DB2D8F0B6E00F131B0 /* md5.c */,
 				CBB8F2DD2D8F0B9700F131B0 /* sha1.c */,
 				CBB8F2DF2D8F0BA600F131B0 /* sha256.c */,
+				CBB8F2E12D8F0BD200F131B0 /* sha512.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				CB53AD7B2D8EDDCF0028CE1E /* binary-io.c in Sources */,
 				CB53AD552D8ED3440028CE1E /* acl_entries.c in Sources */,
 				CB53AD872D8EDF750028CE1E /* c-strcasecmp.c in Sources */,
+				CBB8F2E22D8F0BD200F131B0 /* sha512.c in Sources */,
 				CB53AD752D8EDCA50028CE1E /* set-permissions.c in Sources */,
 				CBB8F2CE2D8F072300F131B0 /* canonicalize-lgpl.c in Sources */,
 			);
