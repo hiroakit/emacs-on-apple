@@ -120,6 +120,8 @@
 				CBB8F2D72D8F0B1300F131B0 /* copy-file-range.c */,
 				CBB8F2D92D8F0B5200F131B0 /* md5-stream.c */,
 				CBB8F2DB2D8F0B6E00F131B0 /* md5.c */,
+				CBB8F2DD2D8F0B9700F131B0 /* sha1.c */,
+				CBB8F2DF2D8F0BA600F131B0 /* sha256.c */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -253,6 +255,7 @@
 				CBB8F2DE2D8F0B9700F131B0 /* sha1.c in Sources */,
 				CBB8F2D42D8F0A7100F131B0 /* cloexec.c in Sources */,
 				CBB8F2D82D8F0B1300F131B0 /* copy-file-range.c in Sources */,
+				CBB8F2E02D8F0BA600F131B0 /* sha256.c in Sources */,
 				CB9EBBB72D8EBB6E005A1036 /* fingerprint.c in Sources */,
 				CB53AD812D8EDEEA0028CE1E /* byteswap.c in Sources */,
 				CB53AD7F2D8EDE950028CE1E /* boot-time.c in Sources */,
