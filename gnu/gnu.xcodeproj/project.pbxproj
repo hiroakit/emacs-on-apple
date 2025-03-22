@@ -244,7 +244,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KCACRD7592;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/Users/hiroakit/git/emacs-on-apple/GnuEmacs/src";
+				HEADER_SEARCH_PATHS = ../GnuEmacs/src;
 				OTHER_CFLAGS = "-H";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -257,7 +257,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KCACRD7592;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/Users/hiroakit/git/emacs-on-apple/GnuEmacs/src";
+				HEADER_SEARCH_PATHS = ../GnuEmacs/src;
 				OTHER_CFLAGS = "-H";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
