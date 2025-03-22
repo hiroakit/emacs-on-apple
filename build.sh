@@ -143,6 +143,14 @@ build_emacs26() {
     cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
+# Build Emacs with xcodebuild
+run_xcodebuild() {
+    echo "Run ${FUNCNAME[0]}"
+    cd ./gnu
+    xcodebuild -project gnu.xcodeproj -scheme gnu clean    
+    xcodebuild -project gnu.xcodeproj -scheme gnu
+}
+
 COMMAND="$1"                 # Using 1st argument as command
 BASE_PATH="$(dirname "$0")"  # Calling script location
 
@@ -160,6 +168,10 @@ case "$COMMAND" in
         codesign "$2"
         exit 0
         ;;
+    "xcode")
+        run_xcodebuild
+        exit 0
+        ;;    
     "emacs26")
         clean && build_emacs26
         exit 0
