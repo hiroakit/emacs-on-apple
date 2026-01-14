@@ -1,0 +1,5 @@
+[submodule "GnuEmacs"]
+	path = GnuEmacs
+	url = https://github.com/emacs-mirror/emacs.git
+	branch = emacs-30
+	shallow = true

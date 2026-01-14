@@ -50,6 +50,16 @@ Finally
 Pull Request are always welcome.  
 Shall we enjoy social coding!
 
+# Emacs for iPad
+
+```
+git clone https://github.com/hiroakit/emacs-on-apple.git
+cd emacs-on-apple
+git switch prototype/ipad-emacs-30
+git submodule init
+git submodule update --depth 1 --single-branch
+```
+
 # License
 
 Licensed under [the GPLv3 license](./LICENSE).
