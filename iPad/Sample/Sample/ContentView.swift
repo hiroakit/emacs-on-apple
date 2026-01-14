@@ -64,8 +64,8 @@ struct ContentView: View {
     
     func testTimespec() {
         // Test timespec_add and timespec_sub which use stdckdint.h
-        var ts1 = timespec(tv_sec: 100, tv_nsec: 500000000)  // 100.5 seconds
-        var ts2 = timespec(tv_sec: 50, tv_nsec: 300000000)    // 50.3 seconds
+        let ts1 = timespec(tv_sec: 100, tv_nsec: 500000000)  // 100.5 seconds
+        let ts2 = timespec(tv_sec: 50, tv_nsec: 300000000)    // 50.3 seconds
         
         // Test addition: 100.5 + 50.3 = 150.8 seconds
         let sum = timespec_add(ts1, ts2)
