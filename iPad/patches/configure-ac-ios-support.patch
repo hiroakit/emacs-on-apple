@@ -1,0 +1,22 @@
+diff --git a/configure.ac b/configure.ac
+index d91395e9163..6368ff3d607 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1443,6 +1443,17 @@ AC_DEFUN
+     ## FIXME: Find a way to use Fink if available (Bug#11507).
+   ;;
+ 
++  ## Apple iOS / iPadOS
++  *-apple-ios* )
++    case "${canonical}" in
++      *-apple-ios[0-9].*) unported=yes ;;
++      i[3456]86-* | x86_64-* | arm-* | aarch64-* )  ;;
++      * )            unported=yes ;;
++    esac
++    opsys=darwin
++    ## FIXME: iOS/iPadOS specific configuration may be needed.
++  ;;
++
+   ## Chromium Native Client
+   *-nacl )
+     opsys=nacl

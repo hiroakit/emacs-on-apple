@@ -1,0 +1,52 @@
+#+TITLE: iPad patches - Patches for GNU Emacs iPadOS Support
+
+This directory contains patches for GNU Emacs to support iPadOS/iOS builds.
+
+* Building libgnu.a for iPadOS
+
+** Overview
+
+This section documents how to build =libgnu.a= for iPadOS/iOS target using the =configure= script.
+
+** Prerequisites
+
+- Xcode 16.4 or later (supports =LC_BUILD_VERSION=)
+- Xcode Command Line Tools installed
+- iOS SDK 18.5
+   - iOS SDK available (check with =xcrun --sdk iphoneos --show-sdk-path=)
+- GNU Emacs source code in =GnuEmacs/= directory (submodule)
+
+** Quick Build
+
+The easiest way to build =libgnu.a= is to use the provided build script:
+
+#+BEGIN_SRC shell
+./build-libgnu.sh --install [--debug]
+./build.sh build
+#+END_SRC
+
+- ./build-libgnu.sh --install [--debug]
+  - Without =--debug=: Builds optimized library
+  - With =--debug=: Builds with debug symbols
+
+** Troubleshooting
+
+- If configure fails with "Emacs does not support 'aarch64-apple-ios' systems", make sure the patch has been applied correctly.
+- If build fails, check that iOS SDK is properly installed and accessible.
+- If linking fails in Xcode project with "building for 'iOS', but linking in object file built for 'macOS'", verify that the object files contain =LC_BUILD_VERSION= with platform 2 (iOS).
+- If some source files fail to compile (e.g., =boot-time.c=, =getrandom.c=, =tempname.c=), the =configure= script should handle these dependencies through conditional compilation based on =config.h= settings.
+** configure-ac-ios-support.patch
+
+*** Purpose
+
+Adds iOS/iPadOS system support to configure.ac, enabling builds for =aarch64-apple-ios= target.
+
+*** Target Commit
+
+- **Repository**: GNU Emacs (GitHub mirror: https://github.com/emacs-mirror/emacs.git)
+- **Branch**: emacs-30
+- **Commit**: =948c4f7f64fb9e662dfcccc609b2e02269c7ebe8=
+  - Date: 2025-12-12 14:15:54 +0200
+  - Message: =; * admin/authors.el (authors-aliases): Add Rudolf Adamkovič (bug#79987).=
+- **File**: =configure.ac=
+
