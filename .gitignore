@@ -2,6 +2,8 @@ src
 pkg
 log
 
+iPad/Sample/libgnu/
+
 # Xcode user-specific files
 *.xcuserstate
 *.xcuserdatad/
