@@ -52,6 +52,8 @@ Shall we enjoy social coding!
 
 # Emacs for iPad
 
+Get code
+
 ```
 git clone https://github.com/hiroakit/emacs-on-apple.git
 cd emacs-on-apple
@@ -59,6 +61,15 @@ git switch prototype/ipad-emacs-30
 git submodule init
 git submodule update --depth 1 --single-branch
 ```
+
+Build
+
+```
+cd iPad
+./build-libgnu.sh --install
+./build.sh build // Build Sample iPad App
+```
+
 
 # License
 
