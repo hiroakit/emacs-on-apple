@@ -65,6 +65,20 @@ echo ""
 # Change to GnuEmacs directory
 cd "$GNUEMACS_DIR"
 
+# Ensure configure script exists (run autogen.sh if needed)
+if [[ ! -f "./configure" ]]; then
+    echo "configure script not found in $GNUEMACS_DIR"
+    echo "Running ./autogen.sh autoconf to generate configure..."
+    if [[ ! -x "./autogen.sh" ]]; then
+        echo "Error: autogen.sh not found or not executable in $GNUEMACS_DIR" >&2
+        echo "Please run './autogen.sh autoconf' manually in $GNUEMACS_DIR and retry." >&2
+        exit 1
+    fi
+    ./autogen.sh autoconf
+    echo "configure script generated."
+    echo ""
+fi
+
 # Apply patch if not already applied
 if ! git apply --check "$PATCH_FILE" 2>/dev/null; then
     echo "Patch already applied or patch check failed, attempting to apply..."
