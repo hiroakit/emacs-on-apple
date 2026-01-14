@@ -1,0 +1,62 @@
+--- a/src/sysdep.c
++++ b/src/sysdep.c
+@@ -57,7 +57,15 @@
+ #endif
+ 
+ #ifdef DARWIN_OS
+-# include <libproc.h>
++/* <libproc.h> exists on macOS, but is not provided by iOS device SDKs.
++   Since DARWIN_OS is also defined for iOS builds, guard libproc usage.  */
++# include <TargetConditionals.h>
++# if defined __has_include
++#  if __has_include(<libproc.h>) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
++#   define HAVE_LIBPROC_H 1
++#   include <libproc.h>
++#  endif
++# endif
+ #endif
+ 
+ #ifdef __FreeBSD__
+@@ -4349,10 +4357,11 @@ system_process_attributes (Lisp_Object pid)
+   if (gr)
+     attrs = Fcons (Fcons (Qgroup, build_string (gr->gr_name)), attrs);
+ 
+-  char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+   char *comm;
+ 
+-  if (proc_pidpath (proc_id, pathbuf, sizeof(pathbuf)) > 0)
++#ifdef HAVE_LIBPROC_H
++  char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
++  if (proc_pidpath (proc_id, pathbuf, sizeof pathbuf) > 0)
+     {
+       if ((comm = strrchr (pathbuf, '/')))
+         comm++;
+@@ -4361,6 +4370,10 @@ system_process_attributes (Lisp_Object pid)
+     }
+   else
+     comm = proc.kp_proc.p_comm;
++#else
++  /* iOS builds do not have libproc; fall back to the short name.  */
++  comm = proc.kp_proc.p_comm;
++#endif
+ 
+   decoded_comm = (code_convert_string_norecord
+ 		  (build_unibyte_string (comm),
+@@ -4407,7 +4420,7 @@ system_process_attributes (Lisp_Object pid)
+   attrs = Fcons (Fcons (Qtpgid, INT_TO_INTEGER (proc.kp_eproc.e_tpgid)),
+ 		 attrs);
+ 
+-#if HAVE_RUSAGE_INFO_CURRENT
++#if defined (HAVE_LIBPROC_H) && HAVE_RUSAGE_INFO_CURRENT
+   rusage_info_current ri;
+   if (proc_pid_rusage(proc_id, RUSAGE_INFO_CURRENT, (rusage_info_t *) &ri) == 0)
+     {
+@@ -4447,7 +4460,7 @@ system_process_attributes (Lisp_Object pid)
+   Lisp_Object etime = Ftime_convert (Ftime_subtract (now, start), Qnil);
+   attrs = Fcons (Fcons (Qetime, etime), attrs);
+ 
+-#if HAVE_PROC_PIDINFO
++#if defined (HAVE_LIBPROC_H) && HAVE_PROC_PIDINFO
+   struct proc_taskinfo taskinfo;
+   if (proc_pidinfo (proc_id, PROC_PIDTASKINFO, 0, &taskinfo, sizeof (taskinfo)) > 0)
+     {
