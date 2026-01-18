@@ -1,0 +1,25 @@
+--- a/src/callproc.c
++++ b/src/callproc.c
+@@ -1353,8 +1353,20 @@ emacs_posix_spawn_init_actions (posix_spawn_file_actions_t *actions,
+   /* Haiku appears to have linkable posix_spawn_file_actions_chdir,
+      but it always fails.  So use the _np function instead.  */
+ #if defined HAVE_POSIX_SPAWN_FILE_ACTIONS_ADDCHDIR && !defined HAIKU
+   error = posix_spawn_file_actions_addchdir (actions, cwd);
+-#else
++#elif defined HAVE_POSIX_SPAWN_FILE_ACTIONS_ADDCHDIR_NP && defined DARWIN_OS
++  /* posix_spawn_file_actions_addchdir_np is macOS-only, not available on iOS.
++     Since DARWIN_OS is also defined for iOS builds, guard _np usage.  */
++# include <TargetConditionals.h>
++# if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+   error = posix_spawn_file_actions_addchdir_np (actions, cwd);
++# else
++  /* iOS: posix_spawn_file_actions_addchdir_np is not available.
++     Skip chdir operation (cwd change will not be applied).  */
++  error = 0; /* Success, but no chdir */
++# endif
++#else
++  /* Fallback: no chdir support available */
++  error = 0; /* Success, but no chdir */
+ #endif
+   if (error != 0)
+     goto out;

@@ -33,9 +33,15 @@ fi
 
 # Prevent globals.h from being regenerated (which would use iOS make-docfile)
 # Touch gl-stamp to mark globals.h as up-to-date
-if [[ -f "globals.h" ]] && [[ ! -f "gl-stamp" ]]; then
-    echo "  Creating gl-stamp to prevent globals.h regeneration..."
-    touch gl-stamp
+# This must be done before any make commands that might trigger globals.h regeneration
+if [[ -f "globals.h" ]]; then
+    if [[ ! -f "gl-stamp" ]]; then
+        echo "  Creating gl-stamp to prevent globals.h regeneration..."
+        touch gl-stamp
+    else
+        # Ensure gl-stamp is up-to-date to prevent regeneration during build
+        touch gl-stamp
+    fi
 fi
 
 # Get number of CPU cores (fallback to 4 if sysctl fails)
@@ -73,37 +79,102 @@ set -e
 echo ""
 echo "Creating libemacs.a static library..."
 
-# Extract the actual object files that were built
-# Look for .o files in the current directory
-BUILT_OBJS=$(find . -maxdepth 1 -name "*.o" -type f | sort | tr '\n' ' ')
+# Get base_obj list from Makefile to ensure all are included
+echo "  Extracting base_obj list from Makefile..."
+BASE_OBJ_LIST=$(make -f - <<'MAKEFILE_END' show_base_obj 2>/dev/null | tr ' ' '\n' | grep '\.o$' | sort
+include Makefile
+show_base_obj:
+	@echo "$(base_obj)" | tr ' ' '\n' | grep '\.o$$'
+MAKEFILE_END
+)
 
-if [[ -z "$BUILT_OBJS" ]]; then
-    echo "Error: No .o files found. Build may have failed." >&2
-    echo ""
-    echo "Troubleshooting:" >&2
-    echo "  1. Check if globals.h exists and is valid" >&2
-    echo "  2. Check if libgnu.a exists" >&2
-    echo "  3. Try building a single object file manually:" >&2
-    echo "     cd $SRC_DIR && make dispnew.o" >&2
+if [[ -z "$BASE_OBJ_LIST" ]]; then
+    echo "Error: Could not extract base_obj list from Makefile." >&2
     exit 1
 fi
 
-OBJ_COUNT=$(echo $BUILT_OBJS | wc -w | tr -d ' ')
-echo "  Found $OBJ_COUNT object files"
+BASE_OBJ_COUNT=$(echo "$BASE_OBJ_LIST" | wc -l | tr -d ' ')
+echo "  Expected base_obj files: $BASE_OBJ_COUNT"
 
-if [[ $OBJ_COUNT -lt 20 ]]; then
-    echo "  Warning: Only $OBJ_COUNT object files found. Expected more." >&2
-    echo "  Some files may have failed to build (check errors above)." >&2
-    echo "  Continuing anyway..." >&2
+# Check which base_obj files exist
+MISSING_BASE_OBJS=()
+for obj in $BASE_OBJ_LIST; do
+    if [[ ! -f "$obj" ]]; then
+        MISSING_BASE_OBJS+=("$obj")
+    fi
+done
+
+if [[ ${#MISSING_BASE_OBJS[@]} -gt 0 ]]; then
+    echo "  Warning: ${#MISSING_BASE_OBJS[@]} base_obj files are missing:" >&2
+    printf "    %s\n" "${MISSING_BASE_OBJS[@]}" >&2
+    echo "  Attempting to build missing files..." >&2
+    # Ensure gl-stamp is up-to-date before building individual files
+    # This prevents make from attempting to regenerate globals.h (which would use iOS make-docfile)
+    if [[ -f "globals.h" ]]; then
+        touch gl-stamp
+    fi
+    # Try to build missing base_obj files individually
+    for obj in "${MISSING_BASE_OBJS[@]}"; do
+        base="${obj%.o}"
+        echo "    Building $obj..."
+        make "$obj" 2>&1 | tail -5 || echo "      Failed to build $obj" >&2
+    done
+    # Re-check
+    MISSING_BASE_OBJS=()
+    for obj in $BASE_OBJ_LIST; do
+        if [[ ! -f "$obj" ]]; then
+            MISSING_BASE_OBJS+=("$obj")
+        fi
+    done
+    if [[ ${#MISSING_BASE_OBJS[@]} -gt 0 ]]; then
+        echo "  Error: Still missing ${#MISSING_BASE_OBJS[@]} base_obj files:" >&2
+        printf "    %s\n" "${MISSING_BASE_OBJS[@]}" >&2
+        echo "  Please build them manually before running this script." >&2
+        exit 1
+    fi
+fi
+
+# Build list of all object files to include:
+# 1. All base_obj files (required)
+# 2. Other .o files in the directory (optional, but include them)
+OTHER_OBJS=""
+for obj_file in *.o; do
+    [[ ! -f "$obj_file" ]] && continue
+    # Skip if it's already in base_obj
+    if echo "$BASE_OBJ_LIST" | grep -q "^${obj_file}$"; then
+        continue
+    fi
+    OTHER_OBJS="${OTHER_OBJS}${obj_file} "
+done
+
+# Combine base_obj and other objs
+ALL_OBJS="$BASE_OBJ_LIST $OTHER_OBJS"
+# Remove duplicates and convert to space-separated list (remove extra spaces)
+ALL_OBJS=$(echo "$ALL_OBJS" | tr ' ' '\n' | grep -v '^$' | sort -u | tr '\n' ' ')
+
+OBJ_COUNT=$(echo $ALL_OBJS | wc -w | tr -d ' ')
+BASE_OBJ_COUNT_INCLUDED=$(echo "$BASE_OBJ_LIST" | wc -l | tr -d ' ')
+echo "  Including $BASE_OBJ_COUNT_INCLUDED base_obj files"
+if [[ $OBJ_COUNT -gt $BASE_OBJ_COUNT_INCLUDED ]]; then
+    OTHER_COUNT=$((OBJ_COUNT - BASE_OBJ_COUNT_INCLUDED))
+    echo "  Including $OTHER_COUNT additional object files"
 fi
 
 echo "  Creating libemacs.a..."
 
-# Create libemacs.a from all built object files
-ar rcs libemacs.a $BUILT_OBJS 2>&1 || {
+# Create libemacs.a from all object files
+ar rcs libemacs.a $ALL_OBJS 2>&1 || {
     echo "Error: Failed to create libemacs.a" >&2
     exit 1
 }
+
+# Verify that all base_obj are included
+VERIFY_COUNT=$(ar -t libemacs.a 2>/dev/null | grep -v '^__' | wc -l | tr -d ' ')
+if [[ $VERIFY_COUNT -lt $BASE_OBJ_COUNT_INCLUDED ]]; then
+    echo "  Warning: libemacs.a contains only $VERIFY_COUNT files, expected at least $BASE_OBJ_COUNT_INCLUDED base_obj files." >&2
+else
+    echo "  Verified: libemacs.a contains $VERIFY_COUNT object files (including $BASE_OBJ_COUNT_INCLUDED base_obj files)"
+fi
 
 # Also include libgnu.a's contents if needed (or link it separately)
 echo "  Created libemacs.a"
