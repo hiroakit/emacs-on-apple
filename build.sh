@@ -148,7 +148,14 @@ build_emacs26() {
 build_emacs_ipad() {
     echo "Run ${FUNCNAME[0]}"
     
-    BASE_PATH="$(dirname "$0")"
+    # Get absolute path of build.sh script directory
+    # Handle both absolute and relative paths
+    if [ -L "$0" ]; then
+        # If $0 is a symlink, resolve it
+        BASE_PATH="$(cd "$(dirname "$(readlink "$0")")" && pwd)"
+    else
+        BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
+    fi
     IPAD_DIR="${BASE_PATH}/iPad"
     GNUEMACS_DIR="${BASE_PATH}/GnuEmacs"
     
