@@ -189,14 +189,15 @@ build_emacs_ipad() {
     
     # Step 1: Build macOS host tools first (libgnu.a and make-docfile)
     # This must be done before iOS libgnu.a to avoid VPATH conflicts
+    # Note: --globals is not included here because src/Makefile doesn't exist yet
     echo "Step 1: Building macOS host tools (libgnu.a and make-docfile)..."
-    "${IPAD_DIR}/build-host-tools.sh" --globals
+    "${IPAD_DIR}/build-host-tools.sh"
     if [ $? -ne 0 ]; then
-        echo "Error: Failed to build host tools or generate globals.h"
+        echo "Error: Failed to build host tools"
         exit 1
     fi
     
-    # Step 2: Build libgnu.a for iOS
+    # Step 2: Build libgnu.a for iOS (this runs configure which creates src/Makefile)
     echo "Step 2: Building libgnu.a for iOS..."
     "${IPAD_DIR}/build-libgnu.sh"
     if [ $? -ne 0 ]; then
@@ -204,8 +205,17 @@ build_emacs_ipad() {
         exit 1
     fi
     
-    # Step 3: Build libemacs.a (base_obj)
-    echo "Step 3: Building libemacs.a (base_obj)..."
+    # Step 3: Generate globals.h using host make-docfile
+    # This must be done after Step 2 because src/Makefile is created by iOS configure
+    echo "Step 3: Generating globals.h using host make-docfile..."
+    "${IPAD_DIR}/build-host-tools.sh" --globals
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to generate globals.h"
+        exit 1
+    fi
+    
+    # Step 4: Build libemacs.a (base_obj)
+    echo "Step 4: Building libemacs.a (base_obj)..."
     "${IPAD_DIR}/build-libemacs.sh"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to build libemacs.a"
