@@ -54,7 +54,15 @@ else
 fi
 
 echo "==> Building host libgnu.a ..."
-make -C "${HOST_BUILD_DIR}/lib" libgnu.a
+# Build libgnu.a in the build directory
+# Note: This should be built BEFORE iOS libgnu.a to avoid VPATH conflicts
+# If ../lib/libgnu.a exists (iOS version), it would be found by VPATH
+cd "${HOST_BUILD_DIR}/lib"
+# Clean build artifacts to ensure fresh build
+# Using 'make clean' is safer than manual rm as it handles subdirectories
+make clean 2>/dev/null || true
+# Build all (which depends on libgnu.a and will build all object files first)
+make all
 
 echo "==> Building host make-docfile ..."
 make -C "${HOST_BUILD_DIR}/lib-src" make-docfile

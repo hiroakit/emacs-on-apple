@@ -27,8 +27,9 @@ help() {
 cat <<EOF
 Help: sh $0 command
 command:
-  emacs26: Build Emacs v26
-  clean:   Remove pkgdir, srcdir
+  emacs26:    Build Emacs v26
+  emacs-ipad: Build Emacs for iPad (libgnu, make-docfile/globals.h, libemacs.a)
+  clean:      Remove pkgdir, srcdir
 EOF
 }
 
@@ -143,6 +144,47 @@ build_emacs26() {
     cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
+# Build Emacs for iPad
+build_emacs_ipad() {
+    echo "Run ${FUNCNAME[0]}"
+    
+    BASE_PATH="$(dirname "$0")"
+    IPAD_DIR="${BASE_PATH}/iPad"
+    
+    # Check if iPad directory exists
+    if [ ! -d "${IPAD_DIR}" ]; then
+        echo "Error: iPad directory not found at ${IPAD_DIR}"
+        exit 1
+    fi
+    
+    # Step 1: Build macOS host tools first (libgnu.a and make-docfile)
+    # This must be done before iOS libgnu.a to avoid VPATH conflicts
+    echo "Step 1: Building macOS host tools (libgnu.a and make-docfile)..."
+    "${IPAD_DIR}/build-host-tools.sh" --globals
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to build host tools or generate globals.h"
+        exit 1
+    fi
+    
+    # Step 2: Build libgnu.a for iOS
+    echo "Step 2: Building libgnu.a for iOS..."
+    "${IPAD_DIR}/build-libgnu.sh"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to build libgnu.a for iOS"
+        exit 1
+    fi
+    
+    # Step 3: Build libemacs.a (base_obj)
+    echo "Step 3: Building libemacs.a (base_obj)..."
+    "${IPAD_DIR}/build-libemacs.sh"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to build libemacs.a"
+        exit 1
+    fi
+    
+    echo "All steps completed successfully!"
+}
+
 COMMAND="$1"                 # Using 1st argument as command
 BASE_PATH="$(dirname "$0")"  # Calling script location
 
@@ -162,6 +204,10 @@ case "$COMMAND" in
         ;;
     "emacs26")
         clean && build_emacs26
+        exit 0
+        ;;
+    "emacs-ipad")
+        build_emacs_ipad
         exit 0
         ;;
     *)
