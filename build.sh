@@ -150,11 +150,34 @@ build_emacs_ipad() {
     
     BASE_PATH="$(dirname "$0")"
     IPAD_DIR="${BASE_PATH}/iPad"
+    GNUEMACS_DIR="${BASE_PATH}/GnuEmacs"
     
     # Check if iPad directory exists
     if [ ! -d "${IPAD_DIR}" ]; then
         echo "Error: iPad directory not found at ${IPAD_DIR}"
         exit 1
+    fi
+    
+    # Check if GnuEmacs directory exists
+    if [ ! -d "${GNUEMACS_DIR}" ]; then
+        echo "Error: GnuEmacs directory not found at ${GNUEMACS_DIR}"
+        exit 1
+    fi
+    
+    # Check if configure script exists, if not run autogen.sh
+    if [ ! -f "${GNUEMACS_DIR}/configure" ]; then
+        echo "configure script not found. Running autogen.sh to generate it..."
+        if [ ! -f "${GNUEMACS_DIR}/autogen.sh" ]; then
+            echo "Error: autogen.sh not found at ${GNUEMACS_DIR}/autogen.sh"
+            exit 1
+        fi
+        cd "${GNUEMACS_DIR}"
+        ./autogen.sh
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to run autogen.sh"
+            exit 1
+        fi
+        cd "${BASE_PATH}"
     fi
     
     # Step 1: Build macOS host tools first (libgnu.a and make-docfile)
