@@ -1,0 +1,31 @@
+# Paths excluded from the PR size count.
+# Syntax is the same as .gitignore (leading / anchors to the root, trailing /
+# matches a directory, * ** ? are supported, ! negates, # comments).
+#
+# Only list things whose line count says nothing about review effort.
+# Anything not listed here is counted and subject to the line limit.
+# Patches (*.patch) and the build script are counted. Do not add them here.
+
+# Research notes and work instructions; being long is normal
+docs/
+
+# Upstream license text, carried verbatim
+LICENSE
+
+# Images and design files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.icns
+*.sketch
+*.pdf
+
+# Xcode / SwiftPM generated files
+*.pbxproj
+*.xcworkspacedata
+*.xcscheme
+xcuserdata/
+Package.resolved

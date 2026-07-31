@@ -63,6 +63,9 @@ Start here if you are picking up this work:
 Pull Request are always welcome.  
 Shall we enjoy social coding!
 
+Keep a PR reviewable: changes are limited to 300 lines and CI enforces it.
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 # License
 
 Licensed under [the GPLv3 license](./LICENSE).
