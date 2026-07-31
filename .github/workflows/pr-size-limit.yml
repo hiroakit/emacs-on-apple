@@ -1,0 +1,23 @@
+name: PR Size Limit
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-size-limit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const check = require('./.github/scripts/pr-size-limit.js');
+            await check({ github, context, core });
