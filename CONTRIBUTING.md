@@ -1,63 +1,65 @@
 # Contributing
 
-このリポジトリへの変更は Pull Request 経由で行う。
+Changes to this repository go through a Pull Request.
 
-## PR のサイズ
+## PR size
 
-**レビューできる大きさに保つこと。** 差分が大きい PR はレビューに時間がかかり、
-判断に自信を持てないまま承認するか、放置されるかのどちらかになる。
-1回あたり 200〜400 行を超えると欠陥の検出率が落ちるという
-[SmartBear: Best Practices for Code Review](https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/)
-が根拠。Cisco で 10か月・2,500件のレビュー・320万行を分析した調査に基づく
-（[Code Review at Cisco Systems](https://static0.smartbear.co/support/media/resources/cc/book/code-review-cisco-case-study.pdf)）。
-本リポジトリの上限は 300 行とする。
+**Keep a PR small enough to review.** A large diff takes long to review, and
+the reviewer ends up either approving without confidence or leaving it alone.
+Defect detection drops once a single review goes past 200-400 lines, per
+[SmartBear: Best Practices for Code Review](https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/),
+based on a 10-month study of 2,500 reviews and 3.2 million lines at Cisco
+([Code Review at Cisco Systems](https://static0.smartbear.co/support/media/resources/cc/book/code-review-cisco-case-study.pdf)).
+The limit here is 300 lines.
 
-### ルール
+### Rules
 
-1. **差分は 300 行以内**（追加 + 削除）。超えると CI が失敗する。
-2. **1つの PR は1つの目的に絞る。** パッチの追加とビルドスクリプトの整理、
-   ドキュメントの更新と設定変更を同時にやらない。
+1. **300 changed lines or fewer** (additions + deletions). CI fails above it.
+2. **One PR, one purpose.** Do not mix a new patch with a build script
+   cleanup, or a documentation update with a configuration change.
 
-### 集計の対象
+### What is counted
 
-| 区分 | 対象 | 扱い |
+| Category | Paths | Effect |
 | --- | --- | --- |
-| 集計する | 下記以外のすべて（`*.patch`, `build.sh`, `*.plist`, `entitlements.plist`, `.github/` など） | **300 行超で失敗** |
-| 集計しない | [.github/pr-size-ignore](.github/pr-size-ignore) に列挙したパス | 数えない |
+| Counted | Everything not listed below (`*.patch`, `build.sh`, `*.plist`, `package-distribution.xml`, `.github/`, ...) | **fails above 300 lines** |
+| Not counted | Paths listed in [.github/pr-size-ignore](.github/pr-size-ignore) | ignored |
 
-除外しているのは、行数がレビュー負荷を表さないもの:
+Only paths whose line count says nothing about review effort are excluded:
 
-- **`docs/` の調査記録・作業手引き** — 長文になるのが正常
-- `LICENSE`（上流のライセンス全文）
-- 画像・デザインファイル・フォント
-- Xcode / SwiftPM の生成物（`*.pbxproj`, `xcuserdata/`, `Package.resolved` など）
+- **`docs/`** -- research notes and work instructions; being long is normal
+- `LICENSE` -- upstream license text, carried verbatim
+- Images and design files
+- Xcode / SwiftPM generated files (`*.pbxproj`, `xcuserdata/`, `Package.resolved`)
 
-**パッチとビルドスクリプトは集計する。** ここが本リポジトリの本体であり、
-行数がそのままレビュー負荷になる。
+**Patches and the build script are counted.** They are the substance of this
+repository, and their line count is the review effort.
 
-除外の追加・変更は [.github/pr-size-ignore](.github/pr-size-ignore) に1行足すだけでよい。
-書式は `.gitignore` と同じ（先頭 `/` でルート固定、末尾 `/` でディレクトリ、
-`*` `**` `?`、`!` で取り消し、`#` でコメント）。
-判定ロジックと閾値は [.github/scripts/pr-size-limit.js](.github/scripts/pr-size-limit.js) にある。
+To exclude something else, add a line to
+[.github/pr-size-ignore](.github/pr-size-ignore). The syntax is the same as
+`.gitignore` (leading `/` anchors to the root, trailing `/` matches a
+directory, `*` `**` `?`, `!` negates, `#` comments). The threshold and the
+matching logic live in [.github/scripts/pr-size-limit.js](.github/scripts/pr-size-limit.js).
 
-### 300 行を超えてしまったら
+### When a change goes past 300 lines
 
-分割する。分割の切り口の例:
+Split it. Useful seams:
 
-- 準備のためのリファクタリング → 本体の変更
-- パッチの追加 → ビルドスクリプトからの適用
-- 署名・パッケージング周りの変更 → ビルド手順の変更
+- preparatory refactoring -> the change itself
+- adding a patch -> applying it from the build script
+- signing and packaging changes -> build procedure changes
 
-分割が本質的に不可能な場合（上流バージョンの一括追従など）は、
-PR の説明にその理由と、レビュー時に重点的に見てほしい箇所を書くこと。
+When a split is genuinely impossible (rebasing onto a new upstream release,
+for example), say so in the PR description and point out where the reviewer
+should look closely.
 
-## ローカルでの確認
+## Checking locally
 
-macOS 上でビルドが通ることを確認してから PR を出す。
+Confirm the build passes on macOS before opening a PR.
 
 ```sh
 sh build.sh emacs26
 ```
 
-パッチを追加・変更した場合は、適用が失敗しないこと、
-`build.sh` の該当箇所からも呼ばれていることを確認する。
+When adding or changing a patch, confirm that it applies cleanly and that
+`build.sh` actually invokes it.

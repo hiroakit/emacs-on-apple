@@ -1,10 +1,11 @@
 "use strict";
 
-// PR の差分量をチェックする。
+// Check the size of a pull request.
 //
-// レビューで判断を要する差分だけを上限の対象にする。
-// 行数がレビュー負荷を表さないパス (調査記録・画像・生成物など) は
-// .github/pr-size-ignore で除外する。書式は .gitignore と同じ。
+// Only the diff that actually requires judgement counts against the limit.
+// Paths whose line count says nothing about review effort (research notes,
+// images, generated files) are excluded through .github/pr-size-ignore,
+// using .gitignore syntax.
 
 const fs = require("fs");
 const path = require("path");
@@ -16,9 +17,9 @@ const RATIONALE =
 const CONFIG_DIR = path.resolve(__dirname, "..");
 const IGNORE_FILE = "pr-size-ignore";
 
-// --- .gitignore 形式のパターン照合 ---------------------------------------
+// --- .gitignore style pattern matching ------------------------------------
 
-// パターン中の 1 セグメント (/ で区切られた 1 階層) を正規表現へ変換する。
+// Convert one segment of a pattern (a single / delimited level) to a regexp.
 function segmentToRegExp(segment) {
   let out = "";
   for (let i = 0; i < segment.length; i++) {
@@ -51,12 +52,12 @@ function compilePattern(rawPattern) {
     pattern = pattern.slice(1);
   }
 
-  // 末尾の / はディレクトリのみに一致することを表す
+  // A trailing / means the pattern matches directories only
   const dirOnly = pattern.endsWith("/");
   if (dirOnly) pattern = pattern.slice(0, -1);
 
-  // 先頭または途中に / があるパターンはリポジトリルートからの相対指定になる。
-  // / を含まないパターンはどの階層にも一致する。
+  // A pattern with a / at the start or in the middle is relative to the
+  // repository root. A pattern without any / matches at any level.
   let anchored = false;
   if (pattern.startsWith("/")) {
     anchored = true;
@@ -77,7 +78,7 @@ function compilePattern(rawPattern) {
   });
 
   const prefix = anchored ? "^" : "^(?:.*/)?";
-  // ディレクトリに一致したパターンは、その配下すべてに一致する
+  // A pattern that matched a directory also matches everything under it
   const suffix = dirOnly ? "/.*$" : "(?:/.*)?$";
 
   return { negated, regexp: new RegExp(prefix + body + suffix) };
@@ -95,7 +96,7 @@ function parsePatternFile(filename) {
     .map(compilePattern);
 }
 
-// .gitignore と同じく、最後に一致したパターンが結果を決める。
+// As in .gitignore, the last matching pattern decides the outcome.
 function isMatch(rules, filename) {
   let matched = false;
   for (const rule of rules) {
@@ -104,7 +105,7 @@ function isMatch(rules, filename) {
   return matched;
 }
 
-// --- 本体 ----------------------------------------------------------------
+// --- main -----------------------------------------------------------------
 
 function summarize(bucket) {
   const additions = bucket.reduce((total, file) => total + file.additions, 0);

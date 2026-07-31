@@ -1,18 +1,18 @@
-# 差分量の集計から除外するパス。
-# 書式は .gitignore と同じ (先頭 / でルート固定、末尾 / でディレクトリ、
-# * ** ? が使える、! で除外の取り消し、# はコメント)。
+# Paths excluded from the PR size count.
+# Syntax is the same as .gitignore (leading / anchors to the root, trailing /
+# matches a directory, * ** ? are supported, ! negates, # comments).
 #
-# ここに書くのは「行数がレビュー負荷を表さないもの」だけにすること。
-# ここに載らないものはすべて集計対象になり、行数の上限が適用される。
-# パッチ (*.patch) とビルドスクリプトは集計対象。ここに足さないこと。
+# Only list things whose line count says nothing about review effort.
+# Anything not listed here is counted and subject to the line limit.
+# Patches (*.patch) and the build script are counted. Do not add them here.
 
-# 調査記録・作業手引き。長文になるのが正常で、行数で止める意味がない
+# Research notes and work instructions; being long is normal
 docs/
 
-# ライセンス全文。上流のものをそのまま置いている
+# Upstream license text, carried verbatim
 LICENSE
 
-# 画像・デザインファイル
+# Images and design files
 *.png
 *.jpg
 *.jpeg
@@ -23,7 +23,7 @@ LICENSE
 *.sketch
 *.pdf
 
-# Xcode / SwiftPM が生成するもの
+# Xcode / SwiftPM generated files
 *.pbxproj
 *.xcworkspacedata
 *.xcscheme
