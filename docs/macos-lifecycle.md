@@ -2,6 +2,10 @@
 
 対象: GNU Emacs 30.2 (`emacs-30.2` タグ)
 
+> **本書は調査結果 (何が足りないか) をまとめたもの。**
+> 実際の作業手順は **[`roadmap.md`](./roadmap.md)** を参照。
+> 着手する場合はそちらから読むこと。
+
 ## 結論を先に
 
 **Objective-C のまま進められる。Swift は不要。**
@@ -142,55 +146,36 @@ Cocoa は `CGDisplayRegisterReconfigurationCallback` (`nsterm.m:5475`) を使う
 | --- | --- |
 | `LSMinimumSystemVersion` | 最小 macOS の明示。未指定だと古い OS で起動して落ちる |
 | `NSHighResolutionCapable` | Retina 対応の明示 |
-| `LSApplicationCategoryType` | **Mac App Store 配布に必須** (README の目標) |
 | `NSSupportsAutomaticTermination` | 明示 (既定 NO のまま維持でよいが意図を残す) |
 | `NSSupportsSuddenTermination` | 同上。未保存バッファがある以上 NO を明示すべき |
 | `NSSupportsAutomaticGraphicsSwitching` | dGPU 搭載機での電力 |
-| `CFBundleURLTypes` の拡充 | `org-protocol` / `emacs` スキーム (§2.3 の `openURLs:` と対で必要) |
-| `NSUserActivityTypes` | Handoff (任意) |
 | `CFBundleVersion` | 現在 `9.0` 固定。ビルド番号になっておらず配布・notarization で問題 |
+| `CFBundleURLTypes` の拡充 | `org-protocol` / `emacs` スキーム。§2.3 の `openURLs:` と対で入れる |
+
+後回し (`roadmap.md` の Phase 4):
+`LSApplicationCategoryType` (Mac App Store 配布に必須)、
+`NSUserActivityTypes` (Handoff)、サンドボックス関連のエンタイトルメント。
 
 ---
 
-## 3. 改訂した進め方
+## 3. 進め方
 
-Swift 移行計画 (`docs/swift-migration.md` §3) を差し替える。
+**作業手順は [`roadmap.md`](./roadmap.md) に分離した。** 着手する場合はそちらを見ること。
+ここでは全体像だけ示す。
 
-### Phase 0: Emacs 30.2 へのリベース
-`docs/swift-migration.md` §0 のとおり。パッチ再作成 (`02-...unexmacosx` は
-pdumper 既定化により不要、ns-inline-patch は上流実装により要再評価)、
-`configure` オプション見直し、CI 更新。**検証手段がないので最優先。**
+| Phase | 内容 | 根拠 |
+| --- | --- | --- |
+| 0 | Emacs 30.2 へのリベース | `swift-migration.md` §0 |
+| 1 | Info.plist の整備 (Emacs のコードに触らない) | §2.4 |
+| 2 | 不足しているデリゲートメソッドの追加 | §2.3 |
+| 3 | ランループ — 本丸 | §1 |
+| 4 | 後回し: Mac App Store、状態復元、Handoff、iPadOS、Swift | §2.3, §2.4 |
 
-### Phase 1: Info.plist の整備 (§2.4)
-Emacs の C コードに触らない。`build.sh` のパッチ追加だけで完結する。
-効果に対して工数が最小なのでここから。
-
-### Phase 2: 不足しているデリゲートメソッドの追加 (§2.3)
-純粋な Objective-C の追加。1 件あたり数十行。優先順:
-
-1. `applicationShouldHandleReopen:hasVisibleWindows:` — 体感効果が最大
-2. `applicationShouldTerminate:` の `NSTerminateLater` 化 (§2.2) — 締切問題の本命
-3. `NSWorkspace` 通知の購読 — `applicationDidFinishLaunching:` に追記
-4. `viewDidChangeEffectiveAppearance` → ダークモード変更を Lisp へ通知
-5. `application:openURLs:` — Info.plist の URL スキームと対で
-6. `applicationWillTerminate:`
-
-Lisp への通知は既存の `KEY_NS_POWER_OFF` と同じ流儀
+Phase 2 の Lisp への通知は既存の `KEY_NS_POWER_OFF` と同じ流儀
 (`nsterm.m:6248` の非キーイベント投入 + `ns-win.el` でのキーバインド) を踏襲するか、
 `DEFVAR_LISP` でフック変数を追加する。
-**いずれも `nsterm.m` / `ns-win.el` 内で完結するため、`docs/swift-migration.md` §2.2 で
+**いずれも `nsterm.m` / `ns-win.el` 内で完結するため、`swift-migration.md` §2.2 で
 問題にした `make-docfile` の制約には抵触しない。**
-
-### Phase 3: ランループ (§1) — 本丸
-App Nap 抑止、締切のあるイベントへの応答保証、ポンプ頻度の底上げ。
-Phase 2 まで終えた状態で、実機で挙動を測りながら進める。
-
-### Phase 4 (任意): 状態復元
-`encodeRestorableStateWithCoder:` / `restoreStateWithCoder:` の実装。
-`applicationSupportsSecureRestorableState:` が `YES` を返している以上、
-本来は実装すべきだが、Emacs の desktop.el と役割が重複するため設計判断が要る。
-
----
 
 ## 4. 上流還元について
 
