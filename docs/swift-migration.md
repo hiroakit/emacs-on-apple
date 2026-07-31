@@ -1,5 +1,15 @@
 # NSTerm の Swift 移行: 対応事項の洗い出し
 
+> **本書は「Swift 化すると何が必要になるか」の調査記録であり、現行の計画ではない。**
+>
+> 目的が「最新 macOS のアプリライフサイクルへの追従」である場合、Swift 化は不要。
+> AppKit のライフサイクル API はすべて Objective-C から利用でき、Swift 専用の
+> ものは一つもない。実際の障害は言語ではなく Emacs のランループ構造にある。
+> 現行の計画は **[`macos-lifecycle.md`](./macos-lifecycle.md)** を参照。
+>
+> 本書は「なぜ Swift を採らないか」の根拠 (§2 のブロッカー一覧) と、
+> NS レイヤの規模の実測値 (§1) として引き続き有効。
+
 対象: GNU Emacs 30.2 (`emacs-30.2` タグ) の NeXTstep バックエンド
 
 本書は README の Objective 「Porting Objective-C code to Swift」を実際に着手可能な
