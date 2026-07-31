@@ -13,19 +13,32 @@ sh build.sh emacs26
 
 # Objective
 
-Immediate 
+Immediate
 
 - Get buildable on Bitrise CI
 - Get launchable on clean installed macOS
 - Get the Apple Notarization
+- **Keep Emacs current with modern macOS app lifecycle events**
 
 Finally
 
-- Porting Objective-C code to Swift
 - Support Xcode
 - Support iPadOS
 - Support Sandbox style macOS App
 - Distribute on Mac App Store
+
+Porting to Swift was investigated and **dropped**. Every AppKit lifecycle
+API is reachable from Objective-C, so the port would carry significant
+cost with no additional capability -- and would forfeit the ability to
+contribute changes back upstream. See [docs/swift-migration.md](./docs/swift-migration.md).
+
+# Documentation
+
+Start here if you are picking up this work:
+
+- [docs/roadmap.md](./docs/roadmap.md) -- **work instructions, start at Phase 0**
+- [docs/macos-lifecycle.md](./docs/macos-lifecycle.md) -- what Emacs 30.2 implements today and what it lacks
+- [docs/swift-migration.md](./docs/swift-migration.md) -- background research on why Swift was dropped
 
 # Dependency
 
