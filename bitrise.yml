@@ -52,7 +52,7 @@ workflows:
             # debug log
             set -x
 
-            bash build.sh emacs-ipad
+            bash build.sh emacs26
     - script@1:
         inputs:
         - content: |-
