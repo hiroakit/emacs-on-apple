@@ -1,8 +1,8 @@
---- a/Makefile.in	2019-01-07 23:26:06.000000000 +0900
-+++ b/Makefile.in	2020-04-26 20:17:15.000000000 +0900
-@@ -420,9 +420,6 @@ VCSWITNESS = $(if $(wildcard $(srcdir)/$
- src: Makefile
- 	$(MAKE) -C $@ VCSWITNESS='$(VCSWITNESS)' all
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -554,9 +554,6 @@
+ 	$(MAKE) -C $@ BIN_DESTDIR='$(BIN_DESTDIR)' \
+ 		 ELN_DESTDIR='$(ELN_DESTDIR)' all
  
 -blessmail: Makefile src
 -	$(MAKE) -C lib-src maybe-blessmail
@@ -10,10 +10,9 @@
  # We used to have one rule per */Makefile.in, but that leads to race
  # conditions with parallel makes, so assume that the timestamp on
  # ./Makefile represents the timestamp on all the other Makefiles.
-
---- a/lib-src/Makefile.in	2020-04-26 20:33:58.000000000 +0900
-+++ b/lib-src/Makefile.in	2020-04-26 20:33:24.000000000 +0900
-@@ -245,12 +245,6 @@ all: ${EXE_FILES} ${SCRIPTS}
+--- a/lib-src/Makefile.in
++++ b/lib-src/Makefile.in
+@@ -294,12 +294,6 @@
  LOADLIBES = ../lib/libgnu.a $(LIBS_SYSTEM)
  $(EXE_FILES): ../lib/libgnu.a
  

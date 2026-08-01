@@ -28,6 +28,7 @@ cat <<EOF
 Help: sh $0 command
 command:
   emacs26: Build Emacs v26
+  emacs30: Build Emacs v30 (v30.2)
   clean:   Remove pkgdir, srcdir
 EOF
 }
@@ -143,6 +144,69 @@ build_emacs26() {
     cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
 }
 
+# Build Emacs 30 (v30.2)
+build_emacs30() {
+    echo "Run ${FUNCNAME[0]}"
+
+    declare -r pkgname="emacs"
+    declare pkgver="30.2"
+    declare -i pkgrel=1
+    declare -r sha256sum="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
+
+    mkdir -p ${srcdir}
+    cd ${srcdir}
+
+    # Use the official tarball, not the emacs-mirror git tree: git checkouts
+    # lack a generated `configure` and require autogen.sh, which hurts
+    # reproducibility. See docs/roadmap.md Phase 0.
+    curl -LO https://ftp.gnu.org/gnu/emacs/${pkgname}-${pkgver}.tar.xz
+
+    checksum ${pkgname}-${pkgver}.tar.xz\
+             "${sha256sum}"
+    if test $? -ne 0; then
+        echo "Unmatch sha256sum"
+        exit -1
+    fi
+
+    tar Jxfv ${pkgname}-${pkgver}.tar.xz
+    cd ${pkgname}-${pkgver}
+    patch -p1 -i ../../00-bump-copyright-year.patch
+    patch -p1 -i ../../01-remove-blessmail.patch
+    patch -p1 -i ../../03-bump-emacs-version.patch
+
+    # 04-macos-big-sur.patch and ns-inline-patch are intentionally NOT
+    # applied here. Emacs 30.2 ships its own NSTextInputClient
+    # implementation (nsterm.m); whether the inline patch is still needed
+    # for Japanese input can only be judged by testing this vanilla build
+    # on real hardware. See docs/roadmap.md Phase 0 (0-A).
+
+    ./autogen.sh
+
+    # Why use without-jpeg, without-lcms2 and without-gnutls?
+    # Reason: https://github.com/hiroakit/emacs-on-apple/issues/2
+    # Carried over unverified for v30.2; re-check on real hardware before
+    # dropping. See docs/roadmap.md Phase 0 (0-C).
+    ./configure CC=clang\
+                --with-ns\
+                --with-modules\
+                --without-x\
+                --without-selinux\
+                --without-mail-unlink\
+                --without-mailhost\
+                --without-pop\
+                --without-mailutils\
+                --without-jpeg\
+                --without-lcms2\
+                --without-gnutls
+
+    make bootstrap
+    make install
+
+    cd ../../
+    mkdir -p ./${pkgdir}/Applications/Emacs
+    cp -r ${srcdir}/${pkgname}-${pkgver}/nextstep/Emacs.app ./${pkgdir}/Applications/Emacs
+}
+
 COMMAND="$1"                 # Using 1st argument as command
 BASE_PATH="$(dirname "$0")"  # Calling script location
 
@@ -162,6 +226,10 @@ case "$COMMAND" in
         ;;
     "emacs26")
         clean && build_emacs26
+        exit 0
+        ;;
+    "emacs30")
+        clean && build_emacs30
         exit 0
         ;;
     *)

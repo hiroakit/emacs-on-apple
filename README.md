@@ -9,6 +9,9 @@ Emacs for Apple devices.
 ```sh
 # Required autoconf, automake, pkg-config, Xcode Command Line Tools
 sh build.sh emacs26
+
+# Experimental: Emacs 30.2. See docs/roadmap.md Phase 0 for status.
+sh build.sh emacs30
 ```
 
 # Objective

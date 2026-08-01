@@ -65,6 +65,30 @@ git clone --depth 1 --branch emacs-30.2 \
 現在の `build.sh` は Emacs 26.3 固定。パッチ 5 枚も 26.3 前提で、
 30.2 にはほぼそのまま当たらない。
 
+### 進捗 (2026-08-01)
+
+以下は `emacs-mirror/emacs` の `emacs-30.2` タグに対する静的な調査と、
+テキストパッチとしての再適用確認 (`patch -p1` がクリーンに当たることの確認)
+まで実施済み。**この作業は Linux コンテナ上で行われており、
+実際に `sh build.sh emacs30` を最後まで走らせる、`.app` を起動する、
+codesign する、Bitrise CI を確認する、のいずれも macOS 実機/実際の CI
+上での検証が別途必要。** 0-D の未検証項目は下記参照。
+
+- 0-A: 完了。`00`/`01`/`03` を書き直し、`02` を削除。
+  `04-macos-big-sur.patch` と `ns-inline-patch` は意図的に**未適用のまま
+  保留** (下記参照)。
+- 0-B: 完了。`build_emacs30()` を追加。sha256 は
+  `ftp.gnu.org` が本コンテナのネットワークポリシーで遮断されていたため
+  自分ではダウンロードできず、代わりに Homebrew (`homebrew-core`) と
+  FreeBSD ports の distinfo という独立した 2 つの配布物から同一の値
+  (`b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9`)
+  を確認して採用した。**実機ビルド前に `.sig` の GPG 検証をすること。**
+- 0-C: 完了。`--without-makeinfo` を削除。
+  `--without-jpeg` `--without-lcms2` `--without-gnutls` は
+  issue #2 の再検証ができていないため、安全側に倒して維持したまま。
+- 0-D: 上記の理由によりビルド・起動・日本語入力・Bitrise CI は
+  **未検証。macOS 環境を持つ人が引き継ぐこと。**
+
 ### 0-A. パッチの棚卸し
 
 | ファイル | 対応 |
@@ -140,11 +164,16 @@ git clone --depth 1 --branch emacs-30.2 \
 
 ### 0-D. 完了条件
 
+macOS 実機がないと検証できない (上の「進捗」参照)。**未チェック。**
+
 - [ ] `sh build.sh emacs30` が最後まで通る
 - [ ] `pkg/Applications/Emacs/Emacs.app` が生成される
 - [ ] `.app` が起動し、`M-x emacs-version` が 30.2 を返す
 - [ ] 日本語入力の挙動を確認し、ns-inline-patch の要否を判断済み
-- [ ] Bitrise CI が緑
+      (不要と判断できれば `04-macos-big-sur.patch` ごと削除してよい)
+- [ ] Bitrise CI が緑 (`bitrise.yml` の `primary` workflow はまだ
+      `build.sh emacs26` のみを走らせている。`emacs30` を CI で検証する
+      かどうかは別途判断すること)
 
 ---
 
