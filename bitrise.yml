@@ -1,0 +1,139 @@
+---
+format_version: '8'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: other
+trigger_map:
+- push_branch: "*"
+  workflow: primary
+- pull_request_source_branch: "*"
+  workflow: primary
+workflows:
+  primary:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            xcodebuild -version
+        title: Echo xcodebuild version
+    - git-clone@8.5:
+        inputs:
+        - submodule_update_depth: '1'
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            brew update
+        title: brew update
+    - brew-install@1.0:
+        inputs:
+        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz azure-cli
+    - script@1:
+        title: build.sh
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            bash build.sh emacs26
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            tar cJvf pkg.tar.xz pkg/Applications/Emacs
+            filename="daily/catalina/emacs-26.3_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+
+            az login -u $az_ad_account -p $az_ad_password
+            az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
+        title: Deploy to Azure Storage Blob
+    - slack@4:
+        inputs:
+        - webhook_url: "$slack_webhook_url"
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.4.x
+  release:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            xcodebuild -version
+        title: Echo xcodebuild version
+    - git-clone@4: {}
+    - brew-install@0:
+        inputs:
+        - packages: autoconf automake pkg-config gnutls texinfo python xz azure-cli
+    - script@1:
+        title: Build Emacs.app
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            bash build.sh emacs26
+    - script@1:
+        title: Codesign Emacs.app
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            bash build.sh codesign "$developer_id_application"
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            tar cJvf pkg.tar.xz pkg/Applications/Emacs
+            filename="release/catalina/emacs-26.3_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+
+            az login -u $az_ad_account -p $az_ad_password
+            az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
+        title: Deploy to Azure Storage Blob
+    - slack@3:
+        inputs:
+        - webhook_url: "$slack_webhook_url"
+meta:
+  bitrise.io:
+    stack: osx-xcode-16.4.x
+    machine_type_id: g2.mac.medium
