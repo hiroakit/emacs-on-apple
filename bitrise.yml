@@ -113,8 +113,8 @@ workflows:
             # the Bitrise Artifacts tab), Gatekeeper treats that as an
             # invalid signature and shows an unrecoverable "Emacs is
             # damaged and can't be opened" dialog with no way to override
-            # it. This nightly build has no Developer ID / notarization
-            # (that's reserved for the release workflow), but a free,
+            # it. Neither this build nor the release workflow has a
+            # Developer ID / notarization set up, but a free,
             # no-certificate deep ad-hoc sign still seals the bundle
             # properly, which downgrades the failure to the ordinary
             # "unidentified developer" prompt a user can allow via
@@ -221,7 +221,7 @@ workflows:
               (princ (format \"smoke test OK: %s\n\" emacs-version)))
             "
     - script@1:
-        title: Codesign Emacs.app
+        title: Codesign Emacs.app (ad-hoc)
         inputs:
         - content: |-
             #!/usr/bin/env bash
@@ -230,7 +230,18 @@ workflows:
             # debug log
             set -x
 
-            bash build.sh codesign "$developer_id_application"
+            # This used to call `build.sh codesign` with a Developer ID
+            # Application identity, but that certificate is expired
+            # (2025-04-29) and the Apple Developer Program membership
+            # needed to issue a new one has lapsed and won't be renewed for
+            # now. Signing attempts failed with "error: The specified item
+            # could not be found in the keychain." (no cert was ever
+            # imported either -- see PR #17, superseded by this change).
+            # Falls back to the same free, no-certificate deep ad-hoc sign
+            # used by the primary/nightly workflow. See that step's
+            # comment for why this is still worth doing over no signature
+            # at all.
+            codesign --force --deep --sign - pkg/Applications/Emacs/Emacs.app
     - script@1:
         title: Deploy to GitHub Releases
         inputs:
