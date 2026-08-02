@@ -27,7 +27,7 @@ help() {
 cat <<EOF
 Help: sh $0 command
 command:
-  emacs26: Build Emacs v26
+  emacs30: Build Emacs v30 (v30.2)
   clean:   Remove pkgdir, srcdir
 EOF
 }
@@ -76,18 +76,21 @@ codesign() {
                    ./pkg/Applications/Emacs/Emacs.app
 }
 
-# Build Emacs 26
-build_emacs26() {
+# Build Emacs 30 (v30.2)
+build_emacs30() {
     echo "Run ${FUNCNAME[0]}"
 
     declare -r pkgname="emacs"
-    declare pkgver="26.3"
+    declare pkgver="30.2"
     declare -i pkgrel=1
-    declare -r sha256sum="4d90e6751ad8967822c6e092db07466b9d383ef1653feb2f95c93e7de66d3485"
-    
+    declare -r sha256sum="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
+
     mkdir -p ${srcdir}
     cd ${srcdir}
 
+    # Use the official tarball, not the emacs-mirror git tree: git checkouts
+    # lack a generated `configure` and require autogen.sh, which hurts
+    # reproducibility. See docs/roadmap.md Phase 0.
     curl -LO https://ftp.gnu.org/gnu/emacs/${pkgname}-${pkgver}.tar.xz
     if test -e ns-inline-patch; then
         rm -rf ns-inline-patch
@@ -95,15 +98,20 @@ build_emacs26() {
     git clone --depth 1 https://github.com/takaxp/ns-inline-patch.git
 
     checksum ${pkgname}-${pkgver}.tar.xz\
-             "4d90e6751ad8967822c6e092db07466b9d383ef1653feb2f95c93e7de66d3485"
-    if test $? -ne 0; then 
+             "${sha256sum}"
+    if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
     fi
 
-    checksum ns-inline-patch/emacs-25.2-inline.patch\
-             "36cc154a9bad2f8a1927bc87b4c89183fb25f2e3bbe04d73690bf947f59639d8"
-    if test $? -ne 0; then 
+    # emacs-29.1-inline.patch is the version the upstream README lists as
+    # applicable to Emacs 30.x. It creates src/macim.[hm] on its own, so
+    # unlike the old 26.3 setup it does not need 04-macos-big-sur.patch
+    # as a prerequisite. Confirmed on real hardware (M-x mac-ime-toggle
+    # works) before this was wired in. See docs/roadmap.md Phase 0 (0-A).
+    checksum ns-inline-patch/emacs-29.1-inline.patch\
+             "57dfd88aecf8366b561421db5b7828c9475b9cfb61743883a6296223cff82e2a"
+    if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
     fi
@@ -112,21 +120,20 @@ build_emacs26() {
     cd ${pkgname}-${pkgver}
     patch -p1 -i ../../00-bump-copyright-year.patch
     patch -p1 -i ../../01-remove-blessmail.patch
-    patch -p1 -i ../../02-provisional-emacs26.3-unexmacosx.c.patch
     patch -p1 -i ../../03-bump-emacs-version.patch
-    patch -p1 -i ../../04-macos-big-sur.patch
-    patch -p1 -i ../ns-inline-patch/emacs-25.2-inline.patch
-    
+    patch -p1 -i ../ns-inline-patch/emacs-29.1-inline.patch
+
     ./autogen.sh
 
     # Why use without-jpeg, without-lcms2 and without-gnutls?
     # Reason: https://github.com/hiroakit/emacs-on-apple/issues/2
+    # Carried over unverified for v30.2; re-check on real hardware before
+    # dropping. See docs/roadmap.md Phase 0 (0-C).
     ./configure CC=clang\
                 --with-ns\
                 --with-modules\
                 --without-x\
                 --without-selinux\
-                --without-makeinfo\
                 --without-mail-unlink\
                 --without-mailhost\
                 --without-pop\
@@ -134,7 +141,7 @@ build_emacs26() {
                 --without-jpeg\
                 --without-lcms2\
                 --without-gnutls
-    
+
     make bootstrap
     make install
 
@@ -160,8 +167,8 @@ case "$COMMAND" in
         codesign "$2"
         exit 0
         ;;
-    "emacs26")
-        clean && build_emacs26
+    "emacs30")
+        clean && build_emacs30
         exit 0
         ;;
     *)
