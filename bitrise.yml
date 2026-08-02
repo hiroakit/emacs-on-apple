@@ -41,7 +41,7 @@ workflows:
         title: brew update
     - brew-install@1.0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz azure-cli
+        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz
     - script@1:
         title: build.sh
         inputs:
@@ -54,6 +54,7 @@ workflows:
 
             bash build.sh emacs30
     - script@1:
+        title: 'Smoke test: launch built Emacs'
         inputs:
         - content: |-
             #!/usr/bin/env bash
@@ -62,12 +63,51 @@ workflows:
             # debug log
             set -x
 
-            tar cJvf pkg.tar.xz pkg/Applications/Emacs
-            filename="daily/macos/emacs-30.2_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+            # Catches a broken build early: `make bootstrap`/`make install`
+            # can succeed while the resulting binary still fails to start
+            # (dyld errors, missing resources, etc). Running it here, on the
+            # same machine that built it, only proves the build itself is
+            # sound -- it does NOT reproduce the Gatekeeper "is damaged"
+            # dialog users see after downloading pkg.tar.xz from a browser,
+            # since that's about the quarantine attribute + code signature
+            # on the *downloaded* copy, not the binary's own correctness.
+            bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
+            test -x "$bin"
 
-            az login -u $az_ad_account -p $az_ad_password
-            az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
-        title: Deploy to Azure Storage Blob
+            # NOTE: --eval reads only the first top-level form from the
+            # string, so everything must be wrapped in one (progn ...).
+            "$bin" --batch --eval "
+            (progn
+              (unless (string-prefix-p \"30.2\" emacs-version)
+                (error \"unexpected emacs-version: %s\" emacs-version))
+              (unless (fboundp 'mac-ime-toggle)
+                (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
+              (princ (format \"smoke test OK: %s\n\" emacs-version)))
+            "
+    - script@1:
+        title: Package nightly build
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # Nightly/daily artifacts used to go to Azure Blob Storage, but
+            # that step (`az login -u/-p`) started failing with AADSTS50079:
+            # Azure AD now enforces MFA on username/password sign-in and
+            # this repo has no other use for Azure. Switched to Bitrise's
+            # own artifact storage instead: standard build artifacts are
+            # retained for 90 days on every plan, including free/Hobby
+            # (https://discuss.bitrise.io/t/advanced-warning-new-build-artifact-retention-periods-coming-on-31-march-2026/25747),
+            # which is plenty for short-lived nightly builds and needs no
+            # cloud account at all. Anything copied into $BITRISE_DEPLOY_DIR
+            # is picked up by the deploy-to-bitrise-io step below.
+            mkdir -p "$BITRISE_DEPLOY_DIR"
+            tar cJvf pkg.tar.xz pkg/Applications/Emacs
+            cp pkg.tar.xz "$BITRISE_DEPLOY_DIR/emacs-30.2_$(date -u +%Y%m%d_%H%M%S_UTC).tar.xz"
+    - deploy-to-bitrise-io@2: {}
     - slack@4:
         inputs:
         - webhook_url: "$slack_webhook_url"
@@ -92,7 +132,7 @@ workflows:
     - git-clone@4: {}
     - brew-install@0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python xz azure-cli
+        - packages: autoconf automake pkg-config gnutls texinfo python xz gh
     - script@1:
         title: Build Emacs.app
         inputs:
@@ -105,6 +145,31 @@ workflows:
 
             bash build.sh emacs30
     - script@1:
+        title: 'Smoke test: launch built Emacs'
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # See the same step in the primary workflow for why this exists
+            # and what it does/doesn't prove.
+            bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
+            test -x "$bin"
+
+            # NOTE: --eval reads only the first top-level form from the
+            # string, so everything must be wrapped in one (progn ...).
+            "$bin" --batch --eval "
+            (progn
+              (unless (string-prefix-p \"30.2\" emacs-version)
+                (error \"unexpected emacs-version: %s\" emacs-version))
+              (unless (fboundp 'mac-ime-toggle)
+                (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
+              (princ (format \"smoke test OK: %s\n\" emacs-version)))
+            "
+    - script@1:
         title: Codesign Emacs.app
         inputs:
         - content: |-
@@ -116,6 +181,7 @@ workflows:
 
             bash build.sh codesign "$developer_id_application"
     - script@1:
+        title: Deploy to GitHub Releases
         inputs:
         - content: |-
             #!/usr/bin/env bash
@@ -124,12 +190,33 @@ workflows:
             # debug log
             set -x
 
-            tar cJvf pkg.tar.xz pkg/Applications/Emacs
-            filename="release/macos/emacs-30.2_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+            # Release artifacts used to go to Azure Blob Storage, but that
+            # step (`az login -u/-p`) started failing with AADSTS50079:
+            # Azure AD now enforces MFA on username/password sign-in and
+            # this repo has no other use for Azure -- keeping a whole cloud
+            # account alive for one upload step wasn't worth it. Switched to
+            # GitHub Releases: per-file cap is 2 GiB, no limit on total
+            # release size or bandwidth, no extra cost on a public repo
+            # (https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
+            # Requires the build to be triggered from a git tag
+            # (BITRISE_GIT_TAG) and a `github_token` secret (PAT with
+            # repo / Contents:write scope) set in this app's Secrets.
+            : "${BITRISE_GIT_TAG:?release workflow must be triggered from a git tag}"
+            export GH_TOKEN="$github_token"
 
-            az login -u $az_ad_account -p $az_ad_password
-            az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
-        title: Deploy to Azure Storage Blob
+            tar cJvf pkg.tar.xz pkg/Applications/Emacs
+
+            if ! gh release view "$BITRISE_GIT_TAG" --repo hiroakit/emacs-on-apple >/dev/null 2>&1; then
+                gh release create "$BITRISE_GIT_TAG" \
+                    --repo hiroakit/emacs-on-apple \
+                    --title "$BITRISE_GIT_TAG" \
+                    --notes "Automated macOS build of Emacs ${BITRISE_GIT_TAG}."
+            fi
+
+            gh release upload "$BITRISE_GIT_TAG" \
+                "pkg.tar.xz#emacs-${BITRISE_GIT_TAG}-macos.tar.xz" \
+                --repo hiroakit/emacs-on-apple \
+                --clobber
     - slack@3:
         inputs:
         - webhook_url: "$slack_webhook_url"
