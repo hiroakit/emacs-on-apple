@@ -54,6 +54,37 @@ workflows:
 
             bash build.sh emacs30
     - script@1:
+        title: 'Smoke test: launch built Emacs'
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # Catches a broken build early: `make bootstrap`/`make install`
+            # can succeed while the resulting binary still fails to start
+            # (dyld errors, missing resources, etc). Running it here, on the
+            # same machine that built it, only proves the build itself is
+            # sound -- it does NOT reproduce the Gatekeeper "is damaged"
+            # dialog users see after downloading pkg.tar.xz from a browser,
+            # since that's about the quarantine attribute + code signature
+            # on the *downloaded* copy, not the binary's own correctness.
+            bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
+            test -x "$bin"
+
+            # NOTE: --eval reads only the first top-level form from the
+            # string, so everything must be wrapped in one (progn ...).
+            "$bin" --batch --eval "
+            (progn
+              (unless (string-prefix-p \"30.2\" emacs-version)
+                (error \"unexpected emacs-version: %s\" emacs-version))
+              (unless (fboundp 'mac-ime-toggle)
+                (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
+              (princ (format \"smoke test OK: %s\n\" emacs-version)))
+            "
+    - script@1:
         title: Package nightly build
         inputs:
         - content: |-
@@ -113,6 +144,31 @@ workflows:
             set -x
 
             bash build.sh emacs30
+    - script@1:
+        title: 'Smoke test: launch built Emacs'
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # See the same step in the primary workflow for why this exists
+            # and what it does/doesn't prove.
+            bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
+            test -x "$bin"
+
+            # NOTE: --eval reads only the first top-level form from the
+            # string, so everything must be wrapped in one (progn ...).
+            "$bin" --batch --eval "
+            (progn
+              (unless (string-prefix-p \"30.2\" emacs-version)
+                (error \"unexpected emacs-version: %s\" emacs-version))
+              (unless (fboundp 'mac-ime-toggle)
+                (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
+              (princ (format \"smoke test OK: %s\n\" emacs-version)))
+            "
     - script@1:
         title: Codesign Emacs.app
         inputs:
