@@ -3,7 +3,17 @@ format_version: '8'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: other
 trigger_map:
-- push_branch: "*"
+# push_branch is intentionally scoped to master only, not "*". With both
+# push_branch: "*" and pull_request_source_branch: "*", pushing to a branch
+# that already has an open PR fired two builds for the same commit (one from
+# each webhook event). Branches without an open PR now get no CI at all
+# until a PR exists; master itself still gets a post-merge sanity build.
+# pull_request_source_branch stays "*" (not narrowed) because this repo
+# accepts external PRs from forks, and a fork's pushes never fire a
+# push_branch event against this repo -- pull_request is the only trigger
+# that can see them.
+# https://discuss.bitrise.io/t/build-on-the-same-commit-sha-triggered-twice/4413
+- push_branch: master
   workflow: primary
 - pull_request_source_branch: "*"
   workflow: primary
