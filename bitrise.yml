@@ -85,6 +85,34 @@ workflows:
               (princ (format \"smoke test OK: %s\n\" emacs-version)))
             "
     - script@1:
+        title: Codesign Emacs.app (ad-hoc)
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            # Emacs's own build only ad-hoc-signs individual Mach-O
+            # binaries (required just to execute at all on Apple Silicon);
+            # the app bundle itself is never sealed as a whole (no
+            # Contents/_CodeSignature/CodeResources, Info.plist not
+            # bound -- verified with `codesign -dvvv`: Sealed Resources
+            # was "none"). Under quarantine (e.g. after downloading from
+            # the Bitrise Artifacts tab), Gatekeeper treats that as an
+            # invalid signature and shows an unrecoverable "Emacs is
+            # damaged and can't be opened" dialog with no way to override
+            # it. This nightly build has no Developer ID / notarization
+            # (that's reserved for the release workflow), but a free,
+            # no-certificate deep ad-hoc sign still seals the bundle
+            # properly, which downgrades the failure to the ordinary
+            # "unidentified developer" prompt a user can allow via
+            # System Settings > Privacy & Security. Confirmed locally
+            # that this turns "Sealed Resources: none" into a populated
+            # resource seal and lets the app launch after `xattr -cr`.
+            codesign --force --deep --sign - pkg/Applications/Emacs/Emacs.app
+    - script@1:
         title: Package nightly build
         inputs:
         - content: |-
