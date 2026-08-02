@@ -214,6 +214,8 @@ README の Usage / Supporting セクションも更新済み。
       "Emacs.app は壊れています" と表示する問題も発見・修正済み
       (バンドル全体が未署名だったのが原因。無料のアドホック
       `codesign --force --deep --sign -` で解消。PR #13)。
+      同一 PR への連続 push でビルドが二重に起動していた問題も
+      `trigger_map` の見直しで解消済み (PR #14)。
 
 ---
 
