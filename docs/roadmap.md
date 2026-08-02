@@ -202,8 +202,18 @@ README の Usage / Supporting セクションも更新済み。
 - [x] `.app` が起動し、`M-x emacs-version` が 30.2 を返す
 - [x] 日本語入力の挙動を確認し、ns-inline-patch の要否を判断済み
       (`emacs-29.1-inline.patch` を採用、`04-macos-big-sur.patch` は削除。詳細は上記)
-- [ ] Bitrise CI が緑 (`bitrise.yml` は `build.sh emacs30` を呼ぶように
-      更新済みだが、実際に CI 上で通るかは未検証)
+- [x] Bitrise CI が緑 (2026-08-02。`primary`/`release` 両ワークフローの
+      `bash build.sh emacs30` が Bitrise の macOS ランナー上で複数回成功
+      (PR #12, #13)。ビルド直後にバイナリを `--batch` 起動して
+      `emacs-version`/`mac-ime-toggle` を検証するスモークテストも追加済み。
+      `primary` は成果物を Bitrise 標準のアーティファクトストレージへ、
+      `release` は GitHub Releases へ公開する形に変更した
+      (元は Azure Blob Storage だったが、Azure AD の MFA 強制化で
+      `az login -u/-p` が壊れたため移行。詳細は各 PR 参照)。
+      nightly ビルドのダウンロード後に Gatekeeper が
+      "Emacs.app は壊れています" と表示する問題も発見・修正済み
+      (バンドル全体が未署名だったのが原因。無料のアドホック
+      `codesign --force --deep --sign -` で解消。PR #13)。
 
 ---
 
