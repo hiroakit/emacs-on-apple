@@ -65,29 +65,47 @@ git clone --depth 1 --branch emacs-30.2 \
 現在の `build.sh` は Emacs 26.3 固定。パッチ 5 枚も 26.3 前提で、
 30.2 にはほぼそのまま当たらない。
 
-### 進捗 (2026-08-01)
+### 進捗 (2026-08-02)
 
-以下は `emacs-mirror/emacs` の `emacs-30.2` タグに対する静的な調査と、
-テキストパッチとしての再適用確認 (`patch -p1` がクリーンに当たることの確認)
-まで実施済み。**この作業は Linux コンテナ上で行われており、
-実際に `sh build.sh emacs30` を最後まで走らせる、`.app` を起動する、
-codesign する、Bitrise CI を確認する、のいずれも macOS 実機/実際の CI
-上での検証が別途必要。** 0-D の未検証項目は下記参照。
+macOS 実機 (Apple Silicon, Sequoia) 上で `sh build.sh emacs30` の実質相当
+(configure/make bootstrap/make install を手動で分割実行) を最後まで走らせ、
+`.app` の起動・日本語入力・`ns-inline-patch` の動作まで確認済み。
+0-D はビルド本体については解消。残るのは Bitrise CI 上での確認のみ。
 
 - 0-A: 完了。`00`/`01`/`03` を書き直し、`02` を削除。
-  `04-macos-big-sur.patch` と `ns-inline-patch` は意図的に**未適用のまま
-  保留** (下記参照)。
+  `04-macos-big-sur.patch` は**削除**(リポジトリから除去)。
+  `ns-inline-patch` は **`emacs-29.1-inline.patch` を採用**して
+  `build_emacs30()` に組み込んだ (下記参照)。
 - 0-B: 完了。`build_emacs30()` を追加。sha256 は
-  `ftp.gnu.org` が本コンテナのネットワークポリシーで遮断されていたため
-  自分ではダウンロードできず、代わりに Homebrew (`homebrew-core`) と
+  `ftp.gnu.org` が遮断されている環境向けに、Homebrew (`homebrew-core`) と
   FreeBSD ports の distinfo という独立した 2 つの配布物から同一の値
   (`b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9`)
-  を確認して採用した。**実機ビルド前に `.sig` の GPG 検証をすること。**
+  を確認して採用した。**`.sig` の GPG 検証は今回も未実施のまま。**
 - 0-C: 完了。`--without-makeinfo` を削除。
   `--without-jpeg` `--without-lcms2` `--without-gnutls` は
   issue #2 の再検証ができていないため、安全側に倒して維持したまま。
-- 0-D: 上記の理由によりビルド・起動・日本語入力・Bitrise CI は
-  **未検証。macOS 環境を持つ人が引き継ぐこと。**
+- 0-D: ビルド・起動・日本語入力は実機で検証済み (下記チェックリスト参照)。
+  Bitrise CI での `emacs30` 実行は未検証。
+
+**ns-inline-patch の判断 (0-A 再評価の結論)**:
+30.2 本体の `NSTextInputClient` 実装だけでも日本語入力は問題なく動作した。
+一方で `ns-inline-patch` が提供する `M-x mac-ime-toggle` 等のコマンドを
+使いたいという要望があったため、`ns-inline-patch` は**採用**した。
+ただし 30.x 向けは `emacs-25.2-inline.patch` ではなく
+**`emacs-29.1-inline.patch`** が正しい版 (upstream README 記載)。
+この版は `src/macim.h` / `src/macim.m` を自前で新規追加するため、
+26.3 時代のように `04-macos-big-sur.patch` を先に当てて `macim.h` を
+用意しておく必要がない。実機で `patch -p1 --dry-run` のクリーン適用と
+`make bootstrap` の成功、`M-x mac-ime-toggle` の動作を確認済み。
+
+**emacs26 コードパスの削除**:
+`04-macos-big-sur.patch` の削除は `build_emacs26()` (旧 `emacs-25.2-inline.patch`
++ 同パッチ前提) を壊す。すでに `02-provisional-emacs26.3-unexmacosx.c.patch`
+が削除済みで `build_emacs26()` は実際には動かない状態だったため、
+維持コストに見合わないと判断し `build_emacs26()` と `emacs26` コマンドを
+`build.sh` から削除した。`bitrise.yml` の `primary`/`release` workflow も
+`build.sh emacs30` を呼ぶように追随済み (Bitrise 上での動作は未検証)。
+README の Usage / Supporting セクションも更新済み。
 
 ### 0-A. パッチの棚卸し
 
@@ -97,22 +115,26 @@ codesign する、Bitrise CI を確認する、のいずれも macOS 実機/実�
 | `01-remove-blessmail.patch` | **要再確認**。`Makefile.in` の構造が変化 |
 | `02-provisional-emacs26.3-unexmacosx.c.patch` | **削除**。理由は下記 |
 | `03-bump-emacs-version.patch` | **作り直し** |
-| `04-macos-big-sur.patch` | **要再評価**。`src/macim.h` を新規追加するもので ns-inline-patch 前提 |
-| `ns-inline-patch` (`emacs-25.2-inline.patch`) | **要再評価**。下記 |
+| `04-macos-big-sur.patch` | **削除済み**。`emacs-29.1-inline.patch` は `macim.h` を自前で追加するため不要 |
+| `ns-inline-patch` (`emacs-29.1-inline.patch`) | **採用済み**。`emacs-25.2-inline.patch` は 26.3 系列専用。下記 |
 
 **`02-...unexmacosx` を削除してよい根拠**:
 30.2 は `--with-dumping=pdumper` が既定 (`configure.ac:467`)。
 `unexmacosx.o` がリンクされるのは `--with-dumping=unexec` を明示した場合のみ
 (`configure.ac:2252`)。`src/unexmacosx.c` はツリーに残っているが使われない。
 
-**ns-inline-patch の再評価**:
+**ns-inline-patch の再評価 (結論: 採用)**:
 30.2 本体に `NSTextInputClient` の実装がある (`nsterm.m:7081`–`7257`)。
 `workingText` の管理 (`nsterm.m:7161`–`7205`)、`ns-working-text` の `DEFVAR`
 (`nsterm.m:11072`)、Lisp 側のオーバーレイ表示 (`lisp/term/ns-win.el:307`–`317` の
 `ns-put-working-text` / `ns-insert-working-text`) が揃っている。
-**まず素の 30.2 をビルドして日本語入力の挙動を実機確認し、
-パッチが本当に必要か判断すること。** 不要ならパッチごと削除でき、
-`04-macos-big-sur.patch` も同時に不要になる。
+実機確認の結果、**素の 30.2 だけでも日本語入力は問題なく動く。**
+それでも `M-x mac-ime-toggle` など `ns-inline-patch` 独自のコマンドを
+使いたいという要望があったため、パッチ自体は採用することにした。
+30.x 向けは upstream README に従い **`emacs-29.1-inline.patch`** を使う
+(`emacs-25.2-inline.patch` は 26.3 系列専用)。この版は `src/macim.h` /
+`src/macim.m` を自前で新規追加するため、`04-macos-big-sur.patch` は
+不要と判断し削除した。
 
 ### 0-B. `build.sh` に `emacs30` を追加
 
@@ -130,9 +152,11 @@ codesign する、Bitrise CI を確認する、のいずれも macOS 実機/実�
    gpg --verify emacs-30.2.tar.xz.sig emacs-30.2.tar.xz
    ```
 3. パッチ適用行を 0-A の結果に合わせて差し替える
-4. 26.3 のコードパスを残すか消すかは判断に委ねる。
-   維持コストを考えると**消してよい**と考えるが、消す場合は README の
-   Supporting セクションも更新すること。
+4. 26.3 のコードパスは**削除済み**。`02-provisional-emacs26.3-unexmacosx.c.patch`
+   が既に削除されていて `build_emacs26()` は実際には動かない状態だったため、
+   維持コストに見合わないと判断し `build_emacs26()` と `emacs26` コマンドを
+   `build.sh` から除去した。README の Supporting / Usage セクションと
+   `bitrise.yml` (`primary`/`release` の両 workflow) も追随済み。
 
 ### 0-C. `configure` オプションの見直し
 
@@ -164,16 +188,22 @@ codesign する、Bitrise CI を確認する、のいずれも macOS 実機/実�
 
 ### 0-D. 完了条件
 
-macOS 実機がないと検証できない (上の「進捗」参照)。**未チェック。**
-
-- [ ] `sh build.sh emacs30` が最後まで通る
-- [ ] `pkg/Applications/Emacs/Emacs.app` が生成される
-- [ ] `.app` が起動し、`M-x emacs-version` が 30.2 を返す
-- [ ] 日本語入力の挙動を確認し、ns-inline-patch の要否を判断済み
-      (不要と判断できれば `04-macos-big-sur.patch` ごと削除してよい)
-- [ ] Bitrise CI が緑 (`bitrise.yml` の `primary` workflow はまだ
-      `build.sh emacs26` のみを走らせている。`emacs30` を CI で検証する
-      かどうかは別途判断すること)
+- [x] `sh build.sh emacs30` が最後まで通る (2026-08-02、macOS Sequoia 実機で確認。
+      configure/make bootstrap/make install を手動で分割実行する形での検証。
+      **注意**: この Mac では `pkgx` が `/usr/local/lib/libz*` を独自の
+      `@rpath` 参照付き zlib に差し替えており、そのままでは `temacs` が
+      `dyld: Library not loaded` で落ちた。`LDFLAGS=-L/opt/homebrew/opt/zlib/lib`
+      `CPPFLAGS=-I/opt/homebrew/opt/zlib/include` を `configure` に渡すことで
+      回避した。**この回避策は `build.sh` に反映しないことにした**
+      (このマシン固有の環境汚染であり、汎用スクリプトに混ぜない判断)。
+      pkgx 等でシステムの `/usr/local/lib` が汚染されている環境では
+      同じ問題に当たる可能性がある。
+- [x] `pkg/Applications/Emacs/Emacs.app` が生成される
+- [x] `.app` が起動し、`M-x emacs-version` が 30.2 を返す
+- [x] 日本語入力の挙動を確認し、ns-inline-patch の要否を判断済み
+      (`emacs-29.1-inline.patch` を採用、`04-macos-big-sur.patch` は削除。詳細は上記)
+- [ ] Bitrise CI が緑 (`bitrise.yml` は `build.sh emacs30` を呼ぶように
+      更新済みだが、実際に CI 上で通るかは未検証)
 
 ---
 

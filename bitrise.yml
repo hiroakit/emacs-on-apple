@@ -52,7 +52,7 @@ workflows:
             # debug log
             set -x
 
-            bash build.sh emacs26
+            bash build.sh emacs30
     - script@1:
         inputs:
         - content: |-
@@ -63,7 +63,7 @@ workflows:
             set -x
 
             tar cJvf pkg.tar.xz pkg/Applications/Emacs
-            filename="daily/catalina/emacs-26.3_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+            filename="daily/macos/emacs-30.2_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
 
             az login -u $az_ad_account -p $az_ad_password
             az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
@@ -103,7 +103,7 @@ workflows:
             # debug log
             set -x
 
-            bash build.sh emacs26
+            bash build.sh emacs30
     - script@1:
         title: Codesign Emacs.app
         inputs:
@@ -125,7 +125,7 @@ workflows:
             set -x
 
             tar cJvf pkg.tar.xz pkg/Applications/Emacs
-            filename="release/catalina/emacs-26.3_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
+            filename="release/macos/emacs-30.2_`date -u +%Y%m%d_%H%M%S_UTC`.tar.xz"
 
             az login -u $az_ad_account -p $az_ad_password
             az storage blob upload -c macos --auth-mode login --account-name emacsonapple --file pkg.tar.xz --name $filename
