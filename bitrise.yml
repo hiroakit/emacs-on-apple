@@ -266,7 +266,12 @@ workflows:
             : "${BITRISE_GIT_TAG:?release workflow must be triggered from a git tag}"
             export GH_TOKEN="$github_token"
 
-            tar cJvf pkg.tar.xz pkg/Applications/Emacs
+            # `gh release upload local-path#label` only sets a cosmetic
+            # display label -- the asset's real name (and download URL)
+            # stays the local file's basename. Rename before uploading so
+            # the actual downloaded file is named sensibly.
+            asset="emacs-${BITRISE_GIT_TAG}-macos.tar.xz"
+            tar cJvf "$asset" pkg/Applications/Emacs
 
             if ! gh release view "$BITRISE_GIT_TAG" --repo hiroakit/emacs-on-apple >/dev/null 2>&1; then
                 gh release create "$BITRISE_GIT_TAG" \
@@ -276,7 +281,7 @@ workflows:
             fi
 
             gh release upload "$BITRISE_GIT_TAG" \
-                "pkg.tar.xz#emacs-${BITRISE_GIT_TAG}-macos.tar.xz" \
+                "$asset" \
                 --repo hiroakit/emacs-on-apple \
                 --clobber
     - slack@3:
