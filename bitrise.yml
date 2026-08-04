@@ -36,6 +36,22 @@ workflows:
     - git-clone@8.5:
         inputs:
         - submodule_update_depth: '1'
+    - restore-cache@2:
+        inputs:
+        # `build.sh` compiles Emacs from scratch every run (see clean() /
+        # build_emacs30() -- no incremental build is possible since the
+        # source itself is re-downloaded each time), which is the single
+        # biggest cost in this workflow (~7 min, ~68% of total). ccache
+        # can't help within a single from-scratch build, but nightly runs
+        # recompile the *same* source+patches+flags repeatedly, so a
+        # cache that persists across builds turns most of that into
+        # cache hits. Confirmed key-based caching (Save/Restore Cache) is
+        # not blocked on the free/Hobby plan (unlike the Pro-only
+        # "Bitrise Build Cache" product for Bazel/Gradle/Xcode, which is
+        # a different, unrelated feature).
+        - key: |-
+            ccache-primary-{{ checksum "build.sh" }}
+            ccache-primary-
     - script@1:
         inputs:
         - content: |-
@@ -51,7 +67,8 @@ workflows:
         title: brew update
     - brew-install@1.0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz
+        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz ccache
+        - upgrade: 'no'
     - script@1:
         title: build.sh
         inputs:
@@ -62,7 +79,19 @@ workflows:
             # debug log
             set -x
 
+            # build.sh honors $CC if set, defaulting to plain clang
+            # otherwise, so this doesn't affect anyone building locally
+            # without ccache installed.
+            export CC="ccache clang"
+            export CCACHE_DIR="$HOME/.ccache"
+
             bash build.sh emacs30
+
+            ccache -s
+    - save-cache@1:
+        inputs:
+        - key: ccache-primary-{{ checksum "build.sh" }}
+        - paths: "$HOME/.ccache"
     - script@1:
         title: 'Smoke test: launch built Emacs'
         inputs:
@@ -168,6 +197,14 @@ workflows:
             xcodebuild -version
         title: Echo xcodebuild version
     - git-clone@4: {}
+    - restore-cache@2:
+        inputs:
+        # See the same step in the primary workflow for why this exists.
+        # Separate key prefix so primary/release don't share (and
+        # potentially thrash) the same ccache contents.
+        - key: |-
+            ccache-release-{{ checksum "build.sh" }}
+            ccache-release-
     - script@1:
         inputs:
         - content: |-
@@ -183,7 +220,8 @@ workflows:
         title: brew update
     - brew-install@0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python xz gh
+        - packages: autoconf automake pkg-config gnutls texinfo python xz gh ccache
+        - upgrade: 'no'
     - script@1:
         title: Build Emacs.app
         inputs:
@@ -194,7 +232,16 @@ workflows:
             # debug log
             set -x
 
+            export CC="ccache clang"
+            export CCACHE_DIR="$HOME/.ccache"
+
             bash build.sh emacs30
+
+            ccache -s
+    - save-cache@1:
+        inputs:
+        - key: ccache-release-{{ checksum "build.sh" }}
+        - paths: "$HOME/.ccache"
     - script@1:
         title: 'Smoke test: launch built Emacs'
         inputs:
