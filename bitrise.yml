@@ -176,6 +176,15 @@ workflows:
             cp pkg.tar.xz "$BITRISE_DEPLOY_DIR/emacs-30.2_$(date -u +%Y%m%d_%H%M%S_UTC).tar.xz"
     - deploy-to-bitrise-io@2: {}
     - slack@4:
+        # Bitrise withholds Secrets from pull_request-triggered builds by
+        # default -- and for a public repo like this one, that can't be
+        # opted out of. $slack_webhook_url is only populated on the
+        # push-triggered (master) runs, so this step always failed (safely,
+        # is_skippable) on every PR build with "WebhookURL empty". Skip it
+        # outright on PR builds instead of leaving a permanent red entry
+        # in every PR's CI log. $BITRISE_PULL_REQUEST is only set when a
+        # build was triggered by a pull request.
+        run_if: '{{getenv "BITRISE_PULL_REQUEST" | eq ""}}'
         inputs:
         - webhook_url: "$slack_webhook_url"
     meta:
@@ -332,6 +341,10 @@ workflows:
                 --repo hiroakit/emacs-on-apple \
                 --clobber
     - slack@3:
+        # See the same guard on the primary workflow's slack step. release
+        # isn't wired into pull_request triggers today, but keep this
+        # defensively consistent in case that ever changes.
+        run_if: '{{getenv "BITRISE_PULL_REQUEST" | eq ""}}'
         inputs:
         - webhook_url: "$slack_webhook_url"
 meta:
