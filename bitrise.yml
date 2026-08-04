@@ -36,6 +36,9 @@ workflows:
     - git-clone@8.5:
         inputs:
         - submodule_update_depth: '1'
+    - restore-cache@2:
+        inputs:
+        - key: test-cache-plan-check
     - script@1:
         inputs:
         - content: |-
