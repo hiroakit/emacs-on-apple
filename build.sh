@@ -129,7 +129,7 @@ build_emacs30() {
     # Reason: https://github.com/hiroakit/emacs-on-apple/issues/2
     # Carried over unverified for v30.2; re-check on real hardware before
     # dropping. See docs/roadmap.md Phase 0 (0-C).
-    ./configure CC=clang\
+    ./configure CC="${CC:-clang}"\
                 --with-ns\
                 --with-modules\
                 --without-x\
