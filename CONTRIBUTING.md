@@ -58,7 +58,7 @@ should look closely.
 Confirm the build passes on macOS before opening a PR.
 
 ```sh
-sh build.sh emacs26
+sh build.sh emacs30
 ```
 
 When adding or changing a patch, confirm that it applies cleanly and that
