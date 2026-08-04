@@ -52,6 +52,14 @@ workflows:
     - brew-install@1.0:
         inputs:
         - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz
+        # Default `upgrade: yes` makes this step run `brew reinstall`,
+        # force-repouring every package on every build even though the
+        # Bitrise macOS stack already ships all of these preinstalled
+        # (confirmed via the "Outdated Formulae" list in the brew update
+        # step's own output). That cost ~2.4 min/build. `upgrade: no`
+        # switches to `brew install`, which is a near-instant no-op for
+        # anything already present.
+        - upgrade: 'no'
     - script@1:
         title: build.sh
         inputs:
@@ -184,6 +192,8 @@ workflows:
     - brew-install@0:
         inputs:
         - packages: autoconf automake pkg-config gnutls texinfo python xz gh
+        # See the same input on the primary workflow's brew-install step.
+        - upgrade: 'no'
     - script@1:
         title: Build Emacs.app
         inputs:
