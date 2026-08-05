@@ -67,7 +67,7 @@ workflows:
         title: brew update
     - brew-install@1.0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python@3.13 xz ccache
+        - packages: autoconf automake pkg-config gnutls texinfo xz ccache
         - upgrade: 'no'
     - script@1:
         title: build.sh
@@ -229,7 +229,7 @@ workflows:
         title: brew update
     - brew-install@0:
         inputs:
-        - packages: autoconf automake pkg-config gnutls texinfo python xz gh ccache
+        - packages: autoconf automake pkg-config gnutls texinfo xz gh ccache
         - upgrade: 'no'
     - script@1:
         title: Build Emacs.app
