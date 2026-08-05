@@ -238,12 +238,24 @@ README の Usage / Supporting セクションも更新済み。
 
 | キー | 値 | 理由 |
 | --- | --- | --- |
-| `LSMinimumSystemVersion` | 決定した最小 macOS | 未指定だと古い OS で起動して落ちる |
+| `LSMinimumSystemVersion` | `15.0` (Sequoia) | 未指定だと古い OS で起動して落ちる。README の「Supporting: macOS Sequoia」に厳密に合わせ、実機検証済みの OS のみを保証する最も安全な選択とした |
 | `NSHighResolutionCapable` | `true` | Retina 対応の明示 |
 | `NSSupportsSuddenTermination` | `false` | 未保存バッファがある以上、明示的に無効化する。既定も `false` だが意図を残す |
 | `NSSupportsAutomaticTermination` | `false` | 同上 |
 | `NSSupportsAutomaticGraphicsSwitching` | `true` | dGPU 搭載機での電力 |
-| `CFBundleVersion` | ビルド番号 | 現在 `9.0` 固定。配布・notarization で問題になる |
+
+**`CFBundleVersion` はこの表から除外した**: 当初 Phase 1 の対象として挙げていたが、
+`05-info-plist-lifecycle.patch` を実タグボールに適用検証する過程で、
+既存の `03-bump-emacs-version.patch` (由来: 別セッションのコミット
+`ad16df0f4d1 Enabled to change CFBundleVersion dynamically in configure.ac`)
+が既に `<string>9.0</string>` → `<string>@build_number@</string>` と書き換え、
+`configure.ac` 側の `AC_SUBST([build_number], [1])` と組み合わせてビルド番号化
+していることが判明したため。コメント `<!-- This SHOULD be a build number. -->`
+が示す通り `CFBundleVersion` は `CFBundleShortVersionString` (マーケティング
+バージョン、`@version@` = "30.2") とは別物で、両者を混同しない。
+実ビルドでの検証値は `CFBundleVersion` = `"1"`、`CFBundleShortVersionString` =
+`"30.2"` (`plutil -p` で確認、2026-08-05)。値が常に固定 `1` である
+(ビルドのたびに増加しない) 点は Phase 1 のスコープ外の既存事項として残す。
 
 **Phase 1 では追加しないもの** (Phase 4 に回す):
 `LSApplicationCategoryType`、`NSUserActivityTypes` (Handoff)、
@@ -261,10 +273,22 @@ Phase 2 の `application:openURLs:` 実装と**対で入れる**こと。
 
 ### 1-D. 完了条件
 
-- [ ] ビルド後の `Emacs.app/Contents/Info.plist` に上記キーが入っている
-      (`plutil -p pkg/Applications/Emacs/Emacs.app/Contents/Info.plist` で確認)
-- [ ] `.app` が起動する
-- [ ] `codesign` と notarization が従来どおり通る
+- [x] ビルド後の `Emacs.app/Contents/Info.plist` に上記キーが入っている
+      (2026-08-05、macOS Sequoia 実機で `sh build.sh emacs30` を最後まで実行し
+      `plutil -p pkg/Applications/Emacs/Emacs.app/Contents/Info.plist` で確認。
+      `LSMinimumSystemVersion => "15.0"`、`NSHighResolutionCapable => 1`、
+      `NSSupportsSuddenTermination => 0`、`NSSupportsAutomaticTermination => 0`、
+      `NSSupportsAutomaticGraphicsSwitching => 1` をすべて確認)
+- [x] `.app` が起動する (2026-08-05。`--batch --eval` での `emacs-version`/
+      `mac-ime-toggle` チェックに加え、`open` での実 GUI 起動・プロセス確認・
+      終了まで実施)
+- [x] `codesign` と notarization が従来どおり通る (2026-08-05。
+      `codesign --force --deep --sign -` (アドホック、Bitrise CI と同じ手順) で
+      `valid on disk` / `satisfies its Designated Requirement` を確認。
+      `Info.plist entries` はキー追加前の 23 から 28 に増加しており、
+      新規キーがシール対象に含まれていることも確認済み。notarization
+      (Apple 提出) 自体は Phase 0 と同様に未実施 — 無料のアドホック署名運用の
+      ため対象外)
 
 ---
 
