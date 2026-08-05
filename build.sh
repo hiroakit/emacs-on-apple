@@ -121,6 +121,7 @@ build_emacs30() {
     patch -p1 -i ../../00-bump-copyright-year.patch
     patch -p1 -i ../../01-remove-blessmail.patch
     patch -p1 -i ../../03-bump-emacs-version.patch
+    patch -p1 -i ../../05-info-plist-lifecycle.patch
     patch -p1 -i ../ns-inline-patch/emacs-29.1-inline.patch
 
     ./autogen.sh
