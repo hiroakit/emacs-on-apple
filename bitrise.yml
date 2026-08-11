@@ -38,20 +38,22 @@ workflows:
         - submodule_update_depth: '1'
     - restore-cache@2:
         inputs:
-        # `build.sh` compiles Emacs from scratch every run (see clean() /
-        # build_emacs30() -- no incremental build is possible since the
-        # source itself is re-downloaded each time), which is the single
-        # biggest cost in this workflow (~7 min, ~68% of total). ccache
-        # can't help within a single from-scratch build, but nightly runs
-        # recompile the *same* source+patches+flags repeatedly, so a
-        # cache that persists across builds turns most of that into
-        # cache hits. Confirmed key-based caching (Save/Restore Cache) is
-        # not blocked on the free/Hobby plan (unlike the Pro-only
-        # "Bitrise Build Cache" product for Bazel/Gradle/Xcode, which is
-        # a different, unrelated feature).
+        # `build.sh` compiles Emacs from scratch every run, which is the
+        # single biggest cost in this workflow (~7 min, ~68% of total).
+        # ccache persists compiler outputs, while .cache/downloads persists
+        # the verified Emacs source archive so it is not downloaded again.
+        # Confirmed key-based caching (Save/Restore Cache) is not blocked on
+        # the free/Hobby plan (unlike the Pro-only "Bitrise Build Cache"
+        # product for Bazel/Gradle/Xcode, which is unrelated).
         - key: |-
             ccache-primary-{{ checksum "build.sh" }}
             ccache-primary-
+    # The version and digest make the source archive immutable and allow it
+    # to survive unrelated build.sh changes. build.sh verifies the digest
+    # again before extracting the restored archive.
+    - restore-cache@2:
+        inputs:
+        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
     - script@1:
         inputs:
         - content: |-
@@ -92,6 +94,11 @@ workflows:
         inputs:
         - key: ccache-primary-{{ checksum "build.sh" }}
         - paths: "$HOME/.ccache"
+    - save-cache@1:
+        inputs:
+        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - paths: .cache/downloads
+        - is_key_unique: 'true'
     - script@1:
         title: 'Smoke test: launch built Emacs'
         inputs:
@@ -214,6 +221,9 @@ workflows:
         - key: |-
             ccache-release-{{ checksum "build.sh" }}
             ccache-release-
+    - restore-cache@2:
+        inputs:
+        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
     - script@1:
         inputs:
         - content: |-
@@ -251,6 +261,11 @@ workflows:
         inputs:
         - key: ccache-release-{{ checksum "build.sh" }}
         - paths: "$HOME/.ccache"
+    - save-cache@1:
+        inputs:
+        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - paths: .cache/downloads
+        - is_key_unique: 'true'
     - script@1:
         title: 'Smoke test: launch built Emacs'
         inputs:
