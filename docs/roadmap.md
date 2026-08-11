@@ -312,10 +312,19 @@ Phase 2 の `application:openURLs:` 実装と**対で入れる**こと。
 
 ### 着手順 (効果の大きい順)
 
-#### 2-A. `applicationShouldHandleReopen:hasVisibleWindows:`
-Dock アイコンをクリックしてもフレームが復活しない問題。
-**体感的な効果が最も大きいのでここから。** 30.2 に実装は一切ない
-(`Reopen` の出現数 0)。
+#### 2-A. `applicationShouldHandleReopen:hasVisibleWindows:` (対応中止)
+
+30.2 にこのメソッドがないことだけを根拠に、不具合と判断していた。
+2026-08-11 の実機検証では、Dock アイコンのクリックに対応する reopen Apple Event
+だけで、最小化したフレームが AppKit の標準動作によって復帰した。
+
+Emacs Lisp の `make-frame-invisible` で完全に不可視化したフレームは、Dock アイコンを
+クリックしても復帰しない。
+これは明示的に不可視化した状態を維持する意図的な動作であり、Dock からの再選択で
+自動的に可視化すると呼び出し側の指定を取り消してしまう。
+
+したがって、このメソッドは追加しない。
+Phase 2 の実装は 2-B から開始する。
 
 #### 2-B. `applicationShouldTerminate:` の `NSTerminateLater` 化
 **締切問題の本命。** 現状の終了パスには次の問題がある:
@@ -369,7 +378,7 @@ Phase 1 で保留した `CFBundleURLTypes` の追加と**対で行う**。
 
 - [ ] `#ifdef NS_IMPL_COCOA` で囲まれており、GNUstep ビルドを壊さない
 - [ ] 実機で該当イベントを発火させて動作確認済み
-      (スリープ、ログアウト、Dock クリック、ダークモード切替)
+      (スリープ、ログアウト、ダークモード切替)
 - [ ] 上流に出せる粒度でコミットが分かれている (§5)
 
 ---
