@@ -84,6 +84,9 @@ build_emacs30() {
     declare pkgver="30.2"
     declare -i pkgrel=1
     declare -r sha256sum="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
+    declare -r archive="${pkgname}-${pkgver}.tar.xz"
+    declare -r cachedir="../.cache/downloads"
+    declare -r cached_archive="${cachedir}/${archive}"
 
     mkdir -p ${srcdir}
     cd ${srcdir}
@@ -91,14 +94,20 @@ build_emacs30() {
     # Use the official tarball, not the emacs-mirror git tree: git checkouts
     # lack a generated `configure` and require autogen.sh, which hurts
     # reproducibility. See docs/roadmap.md Phase 0.
-    curl -LO https://ftp.gnu.org/gnu/emacs/${pkgname}-${pkgver}.tar.xz
+    mkdir -p "${cachedir}"
+    if ! test -f "${cached_archive}"; then
+        curl --fail --location \
+             --output "${cached_archive}.tmp" \
+             "https://ftp.gnu.org/gnu/emacs/${archive}"
+        checksum "${cached_archive}.tmp" "${sha256sum}"
+        mv "${cached_archive}.tmp" "${cached_archive}"
+    fi
     if test -e ns-inline-patch; then
         rm -rf ns-inline-patch
     fi
     git clone --depth 1 https://github.com/takaxp/ns-inline-patch.git
 
-    checksum ${pkgname}-${pkgver}.tar.xz\
-             "${sha256sum}"
+    checksum "${cached_archive}" "${sha256sum}"
     if test $? -ne 0; then
         echo "Unmatch sha256sum"
         exit -1
@@ -116,7 +125,7 @@ build_emacs30() {
         exit -1
     fi
 
-    tar Jxfv ${pkgname}-${pkgver}.tar.xz
+    tar Jxfv "${cached_archive}"
     cd ${pkgname}-${pkgver}
     patch -p1 -i ../../00-bump-copyright-year.patch
     patch -p1 -i ../../01-remove-blessmail.patch

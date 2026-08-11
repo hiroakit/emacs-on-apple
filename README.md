@@ -12,6 +12,10 @@ Emacs for Apple devices.
 sh build.sh emacs30
 ```
 
+The verified Emacs source archive is cached in `.cache/downloads/` and reused
+across builds. The `clean` command removes `src/` and `pkg/`, but keeps this
+download cache. Remove `.cache/` when you need to force a fresh download.
+
 # Objective
 
 Immediate

@@ -1,3 +1,4 @@
 src
 pkg
+.cache/
 .bitrise.secrets.yml
