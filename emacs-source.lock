@@ -1,0 +1,3 @@
+# Pinned GNU Emacs source used by build.sh and Bitrise.
+EMACS_VERSION=30.2
+EMACS_SHA256=b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9

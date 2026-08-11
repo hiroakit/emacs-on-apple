@@ -53,7 +53,7 @@ workflows:
     # again before extracting the restored archive.
     - restore-cache@2:
         inputs:
-        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - key: emacs-source-{{ checksum "emacs-source.lock" }}
     - script@1:
         inputs:
         - content: |-
@@ -96,7 +96,7 @@ workflows:
         - paths: "$HOME/.ccache"
     - save-cache@1:
         inputs:
-        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - key: emacs-source-{{ checksum "emacs-source.lock" }}
         - paths: .cache/downloads
         - is_key_unique: 'true'
     - script@1:
@@ -119,12 +119,13 @@ workflows:
             # on the *downloaded* copy, not the binary's own correctness.
             bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
             test -x "$bin"
+            source emacs-source.lock
 
             # NOTE: --eval reads only the first top-level form from the
             # string, so everything must be wrapped in one (progn ...).
             "$bin" --batch --eval "
             (progn
-              (unless (string-prefix-p \"30.2\" emacs-version)
+              (unless (string-prefix-p \"${EMACS_VERSION}\" emacs-version)
                 (error \"unexpected emacs-version: %s\" emacs-version))
               (unless (fboundp 'mac-ime-toggle)
                 (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
@@ -180,7 +181,8 @@ workflows:
             # is picked up by the deploy-to-bitrise-io step below.
             mkdir -p "$BITRISE_DEPLOY_DIR"
             tar cJvf pkg.tar.xz pkg/Applications/Emacs
-            cp pkg.tar.xz "$BITRISE_DEPLOY_DIR/emacs-30.2_$(date -u +%Y%m%d_%H%M%S_UTC).tar.xz"
+            source emacs-source.lock
+            cp pkg.tar.xz "$BITRISE_DEPLOY_DIR/emacs-${EMACS_VERSION}_$(date -u +%Y%m%d_%H%M%S_UTC).tar.xz"
     - deploy-to-bitrise-io@2: {}
     - slack@4:
         # Bitrise withholds Secrets from pull_request-triggered builds by
@@ -223,7 +225,7 @@ workflows:
             ccache-release-
     - restore-cache@2:
         inputs:
-        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - key: emacs-source-{{ checksum "emacs-source.lock" }}
     - script@1:
         inputs:
         - content: |-
@@ -263,7 +265,7 @@ workflows:
         - paths: "$HOME/.ccache"
     - save-cache@1:
         inputs:
-        - key: emacs-source-30.2-b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9
+        - key: emacs-source-{{ checksum "emacs-source.lock" }}
         - paths: .cache/downloads
         - is_key_unique: 'true'
     - script@1:
@@ -280,12 +282,13 @@ workflows:
             # and what it does/doesn't prove.
             bin="pkg/Applications/Emacs/Emacs.app/Contents/MacOS/Emacs"
             test -x "$bin"
+            source emacs-source.lock
 
             # NOTE: --eval reads only the first top-level form from the
             # string, so everything must be wrapped in one (progn ...).
             "$bin" --batch --eval "
             (progn
-              (unless (string-prefix-p \"30.2\" emacs-version)
+              (unless (string-prefix-p \"${EMACS_VERSION}\" emacs-version)
                 (error \"unexpected emacs-version: %s\" emacs-version))
               (unless (fboundp 'mac-ime-toggle)
                 (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
