@@ -119,9 +119,16 @@ Cocoa は `CGDisplayRegisterReconfigurationCallback` (`nsterm.m:5475`) を使う
 
 ### 2.3 未実装のもの (すべて実測で 0 件)
 
+`applicationShouldHandleReopen:hasVisibleWindows:` も未実装だが、対応対象にはしない。
+2026-08-11 の実機検証では、最小化したフレームは reopen Apple Event に対する
+AppKit の標準動作で復帰した。
+Emacs Lisp の `make-frame-invisible` で完全に不可視化したフレームが Dock アイコンの
+クリックで復帰しないのは、明示的な不可視状態を維持する意図的な動作である。
+このメソッドを追加して不可視フレームを自動的に可視化すると、呼び出し側の指定を
+取り消してしまうため、対応タスクを中止した。
+
 | API | 影響 |
 | --- | --- |
-| `applicationShouldHandleReopen:hasVisibleWindows:` | Dock アイコンをクリックしてもフレームが復活しない。体感的な不満として最も大きい |
 | `application:openURLs:` | `application:openFile(s):` は macOS 10.13 で非推奨。URL スキーム (org-protocol 等) を受けられない |
 | `applicationWillTerminate:` | 終了直前の後始末フックがない |
 | `NSWorkspaceWillSleepNotification` / `DidWakeNotification` | スリープ・復帰を検知できない (タイマー、ネットワーク接続の張り直し) |
