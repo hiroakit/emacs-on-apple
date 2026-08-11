@@ -15,6 +15,9 @@ sh build.sh emacs30
 The verified Emacs source archive is cached in `.cache/downloads/` and reused
 across builds. The `clean` command removes `src/` and `pkg/`, but keeps this
 download cache. Remove `.cache/` when you need to force a fresh download.
+The source version and SHA-256 are pinned in `emacs-source.lock`; update that
+file to select a different Emacs source. Bitrise derives its download-cache
+key from the lockfile automatically.
 
 # Objective
 

@@ -21,13 +21,20 @@ set -e
 
 declare -r pkgdir="pkg"
 declare -r srcdir="src"
+declare -r BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
+
+# Keep the source version and checksum in one file. Bitrise also hashes this
+# file for its download-cache key, so changing either value invalidates the
+# cached archive automatically.
+source "${BASE_PATH}/emacs-source.lock"
+readonly EMACS_VERSION EMACS_SHA256
 
 # Show usage.
 help() {
 cat <<EOF
 Help: sh $0 command
 command:
-  emacs30: Build Emacs v30 (v30.2)
+  emacs30: Build Emacs v30 (v${EMACS_VERSION})
   clean:   Remove pkgdir, srcdir
 EOF
 }
@@ -51,7 +58,7 @@ checksum() {
     declare -r sha256sum=${2}
     if test ${filesum} != ${sha256sum}; then
         echo "Unmatch sha256sum"
-        exit -1
+        return 1
     fi
 }         
 
@@ -76,14 +83,14 @@ codesign() {
                    ./pkg/Applications/Emacs/Emacs.app
 }
 
-# Build Emacs 30 (v30.2)
+# Build Emacs 30
 build_emacs30() {
     echo "Run ${FUNCNAME[0]}"
 
     declare -r pkgname="emacs"
-    declare pkgver="30.2"
+    declare -r pkgver="${EMACS_VERSION}"
     declare -i pkgrel=1
-    declare -r sha256sum="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
+    declare -r sha256sum="${EMACS_SHA256}"
     declare -r archive="${pkgname}-${pkgver}.tar.xz"
     declare -r cachedir="../.cache/downloads"
     declare -r cached_archive="${cachedir}/${archive}"
@@ -95,6 +102,11 @@ build_emacs30() {
     # lack a generated `configure` and require autogen.sh, which hurts
     # reproducibility. See docs/roadmap.md Phase 0.
     mkdir -p "${cachedir}"
+    if test -f "${cached_archive}" && \
+       ! checksum "${cached_archive}" "${sha256sum}"; then
+        echo "Discard cached archive with unexpected sha256sum"
+        rm -f "${cached_archive}"
+    fi
     if ! test -f "${cached_archive}"; then
         curl --fail --location \
              --output "${cached_archive}.tmp" \
@@ -161,7 +173,6 @@ build_emacs30() {
 }
 
 COMMAND="$1"                 # Using 1st argument as command
-BASE_PATH="$(dirname "$0")"  # Calling script location
 
 case "$COMMAND" in
     "help")
