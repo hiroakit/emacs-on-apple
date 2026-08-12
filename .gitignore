@@ -1,4 +1,6 @@
 src
 pkg
 .cache/
+.codex/
+log/
 .bitrise.secrets.yml
