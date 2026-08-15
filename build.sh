@@ -144,6 +144,7 @@ build_emacs30() {
     patch -p1 -i ../../03-bump-emacs-version.patch
     patch -p1 -i ../../05-info-plist-lifecycle.patch
     patch -p1 -i ../ns-inline-patch/emacs-29.1-inline.patch
+    patch -p1 -i ../../06-macos-workspace-notifications.patch
 
     ./autogen.sh
 

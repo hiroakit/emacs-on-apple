@@ -1,0 +1,96 @@
+#+title: NSWorkspaceライフサイクル通知の実機テスト
+
+* 目的
+
+macOSが発行するスリープ、復帰、ファストユーザスイッチ、ログアウトの通知が、Emacs Lispのhookまで届くことを確認する。
+テスト用Emacsは =-Q= で起動し、受信した通知を =~/Library/Logs/EmacsWorkspaceLifecycle.log= へ即時追記する。
+
+* 準備
+
+未保存の作業を保存する。
+ファストユーザスイッチには別のローカルユーザーが必要になる。
+ログアウトはCodexやTerminalの接続を終了させる可能性があるため、最後に実施する。
+
+リポジトリのルートで、検証対象のアプリとスクリプトを指定する。
+=TEST_APP= には =06-macos-workspace-notifications.patch= を含むビルドを指定する。
+
+#+begin_src sh
+TEST_APP="$PWD/pkg/Applications/Emacs/Emacs.app"
+TEST_SCRIPT="$PWD/test/manual/ns-workspace-lifecycle.el"
+
+sw_vers
+"$TEST_APP/Contents/MacOS/Emacs" --batch -Q \
+  --eval '(princ (format "Emacs %s / %s\n" emacs-version system-configuration))'
+
+open -na "$TEST_APP" --args -Q -l "$TEST_SCRIPT"
+tail -n 5 ~/Library/Logs/EmacsWorkspaceLifecycle.log
+#+end_src
+
+=Emacs NSWorkspace lifecycle test= というフレームと、次の起動記録を確認する。
+
+#+begin_example
+2026-08-13T00:00:00+0900	test-start	pid=12345	emacs=30.2
+#+end_example
+
+* スリープと復帰
+
+1. Appleメニューから「スリープ」を選ぶ。
+2. Macが完全にスリープしてから10秒程度待つ。
+3. Macを復帰させ、必要ならロックを解除する。
+4. テスト用Emacsのフレームとバッファが残り、操作できることを確認する。
+5. =tail -n 10 ~/Library/Logs/EmacsWorkspaceLifecycle.log= を実行する。
+
+合格条件は、=will-sleep= と =did-wake= がこの順序で記録されることである。
+通知の重複、応答停止、フレームやバッファの消失があれば記録する。
+
+* ファストユーザスイッチ
+
+1. 現在のユーザーからログアウトせず、別のユーザーへ切り替える。
+2. 別ユーザー側で10秒程度待つ。
+3. 元のユーザーへ切り替える。
+4. テスト用Emacsが引き続き操作できることを確認する。
+5. =tail -n 10 ~/Library/Logs/EmacsWorkspaceLifecycle.log= を実行する。
+
+合格条件は、=session-did-resign-active= が記録されることである。
+画面のロックだけではこのテストにならない可能性があるため、別ユーザーのセッションへ切り替える。
+元のユーザーへ戻った際の通知は今回の実装対象ではない。
+
+* ログアウト
+
+1. テスト用Emacsが動作していることを確認する。
+2. Appleメニューから通常の「ログアウト」を選ぶ。
+3. 強制ログアウトは選ばない。
+4. 再ログイン後、=tail -n 15 ~/Library/Logs/EmacsWorkspaceLifecycle.log= を実行する。
+
+合格条件は、Emacsが終了する前に =will-power-off= が記録されることである。
+ログアウト確認画面やアプリ終了待ちが表示された場合は、表示内容と選択したボタンも記録する。
+
+* 結果の記録
+
+各テストについて、macOSのバージョン、Emacsのビルド、実際の操作、操作前後の状態、該当するログ行、合否を記録する。
+全ログは次のコマンドで取得できる。
+
+#+begin_src sh
+cat ~/Library/Logs/EmacsWorkspaceLifecycle.log
+#+end_src
+
+* 2026-08-15の実機結果
+
+macOS 15.7.9（ビルド24G830）、Apple Silicon、Emacs 30.2で実施した。
+
+| 操作 | 記録時刻 | 通知 | 結果 |
+|------+----------+------+------|
+| Appleメニューからスリープし、復帰 | 09:53:16 | =will-sleep= | 合格 |
+| 同上 | 09:54:56 | =did-wake= | 合格 |
+| 画面をロックし、別ユーザーへ切り替え | 09:56:37 | =session-did-resign-active= | 合格 |
+| Appleメニューから通常ログアウト | 10:25:29 | =will-power-off= | 合格 |
+
+スリープとファストユーザスイッチ後は同じEmacsプロセスが動作を続けた。
+元のユーザーへ戻った後、テスト用Emacsの =*scratch*= バッファで日本語を入力できた。
+
+初回のログアウト試験では =will-power-off= が記録されなかった。
+通知を一時的な =emacs_event= へ格納する実装では、ログアウト時の通知を捨てる可能性があった。
+=kbd_buffer_store_event= へ直接格納するよう修正し、再ビルド後のログアウト試験で通知を確認した。
+
+=*scratch*= の内容はログアウト後に復元されなかった。
+=*scratch*= は通常ファイルへ保存されないため、この結果は通知hookの合否には含めない。
