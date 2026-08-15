@@ -10,6 +10,9 @@ Emacs for Apple devices.
 # Required autoconf, automake, pkg-config, Xcode Command Line Tools
 # Experimental: Emacs 30.2. See docs/roadmap.md Phase 0 for status.
 sh build.sh emacs30
+
+# Launch the built app through Launch Services, as Finder does.
+open "$PWD/pkg/Applications/Emacs/Emacs.app"
 ```
 
 The verified Emacs source archive is cached in `.cache/downloads/` and reused
@@ -46,6 +49,7 @@ Start here if you are picking up this work:
 
 - [docs/roadmap.md](./docs/roadmap.md) -- **work instructions, start at Phase 0**
 - [docs/macos-lifecycle.md](./docs/macos-lifecycle.md) -- what Emacs 30.2 implements today and what it lacks
+- [docs/macos-app-launching.md](./docs/macos-app-launching.md) -- launch commands and Launch Services troubleshooting
 - [docs/swift-migration.md](./docs/swift-migration.md) -- background research on why Swift was dropped
 
 # Dependency
