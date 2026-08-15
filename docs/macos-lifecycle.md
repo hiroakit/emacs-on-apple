@@ -66,15 +66,17 @@ Tramp のブロッキング I/O) は一切ポンプしないため、macOS か�
 1. **ポンプ頻度の底上げ** — Emacs の `Vinhibit_quit` / QUIT チェック地点や
    `atimer` から定期的に `ns_read_socket_1(..., YES)` 相当を回す。
    影響範囲は小さいが、根本解決にはならない。
-2. **締切のあるイベントだけ別扱い** — `applicationShouldTerminate:` で
+2. **締切のあるイベントだけ別扱い**：`applicationShouldTerminate:` で
    `NSTerminateLater` を返し、Lisp 側の保存処理完了後に
    `replyToApplicationShouldTerminate:YES` を呼ぶ。
-   AppKit に「待っている」と伝えられるので強制終了を回避できる。**費用対効果が最も高い。**
+   ただし、2026-08-12 の実機試作では AppKit の終了待機ループから Lisp へ制御が戻らず、
+   保存処理を開始できなかった。
+   この方法はランループ改修と組み合わせる必要がある。
 3. **App Nap を明示的に抑止** — `[[NSProcessInfo processInfo]
    beginActivityWithOptions:NSActivityUserInitiated reason:@"..."]`。
    数行で効果が出る。
 
-推奨は 2 → 3 → 1 の順。
+推奨は 3 → 1 → 2 の順。
 
 ---
 
@@ -114,8 +116,11 @@ Cocoa は `CGDisplayRegisterReconfigurationCallback` (`nsterm.m:5475`) を使う
 - **`NSTerminateLater` と `replyToApplicationShouldTerminate:` はどちらも 0 件。**
   ログアウト時に「保存処理をしているので待ってほしい」と AppKit に伝える
   正規の手段を使っていない。
+  ただし、通常の Quit Apple Event は既存の `KEY_NS_POWER_OFF` 経由で正常終了することを
+  2026-08-12 に実機確認した。
 
-→ ここが §1.3 の方針 2 で直すべき箇所。
+この不足は §1.3 の方針 2 だけでは直せない。
+`NSTerminateLater` の待機中に Lisp を実行できるよう、ランループ側の対応が先に必要になる。
 
 ### 2.3 未実装のもの (すべて実測で 0 件)
 
