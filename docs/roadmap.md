@@ -324,10 +324,12 @@ Emacs Lisp の `make-frame-invisible` で完全に不可視化したフレーム
 自動的に可視化すると呼び出し側の指定を取り消してしまう。
 
 したがって、このメソッドは追加しない。
-Phase 2 の実装は 2-B から開始する。
+2-B を保留し、Phase 2 の実装は 2-C から開始した。
+2-C は完了しているため、次は 2-D に着手する。
 
-#### 2-B. `applicationShouldTerminate:` の `NSTerminateLater` 化
-**締切問題の本命。** 現状の終了パスには次の問題がある:
+#### 2-B. `applicationShouldTerminate:` の `NSTerminateLater` 化 (Phase 3 まで保留)
+
+現状の終了パスには次の問題がある:
 
 - `-[EmacsApp terminate:]` (`nsterm.m:6248`) が `NSApplication` の
   `terminate:` をオーバーライドし、**`[super terminate:]` を呼ばない**
@@ -338,9 +340,20 @@ Phase 2 の実装は 2-B から開始する。
   どちらも出現数 0** — ログアウト時に「保存中なので待ってほしい」と
   AppKit に伝える正規の手段を使っていない
 
-`applicationShouldTerminate:` で `NSTerminateLater` を返し、
-Lisp 側の保存完了後に `replyToApplicationShouldTerminate:YES` を呼ぶ形にする。
-これでログアウト・シャットダウン時の強制終了を回避できる。
+2026-08-12 に macOS 15.7.9、Emacs 30.2、Apple Silicon の実機で、
+Quit Apple Event を PID 指定で送信して検証した。
+変更前の Emacs は `NSTerminateNow` を返した後、既存の
+`KEY_NS_POWER_OFF` 経由で `save-buffers-kill-emacs` を実行し、正常終了した。
+
+一方、`applicationShouldTerminate:` で `NSTerminateLater` を返し、
+`KEY_NS_POWER_OFF` と `NX_APPDEFINED` を投入する試作では、AppKit の終了待機ループから
+Emacs の Lisp ループへ制御が戻らず、保存処理を開始できなかった。
+`replyToApplicationShouldTerminate:` を呼ぶ Lisp コード自体が実行されないため、
+この方法だけでは終了待ちを完了できない。
+
+したがって、`NSTerminateLater` 化は Phase 2 の独立タスクとして実装しない。
+Phase 3 でランループを改修し、AppKit の終了待機中にも Lisp 処理を進められる構造を
+用意してから再検討する。
 
 **注意**: 2 つの終了パスが重複しているため、片方だけ直すと
 Cmd-Q とログアウトで挙動が食い違う。両方の経路を実機で確認すること。
@@ -391,7 +404,7 @@ Phase 1 で保留した `CFBundleURLTypes` の追加と**対で行う**。
 
 ---
 
-## Phase 3: ランループ — 本丸
+## Phase 3: ランループ
 
 **ここが本質的な問題。Phase 2 まで終えた状態で着手する。**
 
@@ -427,12 +440,14 @@ macOS 10.9 専用の回避策で、現行 macOS では `[super run]` に素通�
                        reason:@"..."];
    ```
    返り値のトークンを保持し続ける必要がある点に注意。
-2. **締切のあるイベントの別扱い** — Phase 2-B の `NSTerminateLater` 化が
-   これに当たる。Phase 2 で済んでいれば大きな山は越えている。
-3. **ポンプ頻度の底上げ** — Emacs の `atimer` などから定期的に
+2. **ポンプ頻度の底上げ**：Emacs の `atimer` などから定期的に
    `ns_read_socket_1(..., YES)` 相当を回す。
-   **影響範囲が広く、根本解決にもならない。最後の手段。**
-   ここに手を出す前に、1 と 2 で実用上十分かを実機で測ること。
+   影響範囲が広いため、AppKit の終了待機ループと Lisp の実行を接続できる
+   最小の変更範囲を先に特定する。
+3. **締切のあるイベントの別扱い**：2 の接続を用いて Phase 2-B の
+   `NSTerminateLater` 化を再試験する。
+   保存の完了とキャンセルの両方で `replyToApplicationShouldTerminate:` が
+   呼ばれることを確認する。
 
 ### 3-C. 完了条件
 
