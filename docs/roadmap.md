@@ -355,6 +355,14 @@ Cmd-Q とログアウトで挙動が食い違う。両方の経路を実機で�
 **購読先は `[NSWorkspace sharedWorkspace] notificationCenter` であって
 `[NSNotificationCenter defaultCenter]` ではない。** 間違えると通知が来ない。
 
+**完了 (2026-08-15)**: 4 通知を Lisp hook に変換するパッチを追加した。
+macOS 15.7.9 (24G830)、Apple Silicon、Emacs 30.2 で、スリープと復帰、
+別ユーザーへのファストユーザスイッチ、通常のログアウトを実施し、
+各通知が記録されることを確認した。
+通知は `emacs_event` の有効期間に依存させず、`kbd_buffer_store_event` へ
+直接格納する。前者ではログアウト通知が失われることを実機で確認したためである。
+再現手順とログは `docs/ns-workspace-lifecycle-test.org` を参照する。
+
 #### 2-D. ダークモードの自動追従
 30.2 は `-[EmacsWindow setAppearance]` (`nsterm.m:9867`) で
 `ns-appearance` フレームパラメータから外観を**設定する**だけで、

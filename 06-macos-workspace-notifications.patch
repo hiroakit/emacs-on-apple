@@ -1,0 +1,176 @@
+diff --git a/src/nsterm.h b/src/nsterm.h
+--- a/src/nsterm.h
++++ b/src/nsterm.h
+@@ -797,7 +797,11 @@
+ #define KEY_NS_TOGGLE_TOOLBAR          ((1<<28)|(0<<16)|13)
+ #define KEY_NS_SHOW_PREFS              ((1<<28)|(0<<16)|14)
+ #define KEY_MAC_CHANGE_INPUT_METHOD    ((1<<28)|(0<<16)|15)
+ #define KEY_NS_PUT_MARKED_TEXT         ((1<<28)|(0<<16)|16)
++#define KEY_NS_WILL_SLEEP              ((1<<28)|(0<<16)|17)
++#define KEY_NS_DID_WAKE                ((1<<28)|(0<<16)|18)
++#define KEY_NS_WILL_POWER_OFF          ((1<<28)|(0<<16)|19)
++#define KEY_NS_SESSION_RESIGNED        ((1<<28)|(0<<16)|20)
+ 
+ /* Could use list to store these, but rest of emacs has a big infrastructure
+    for managing a table of bitmap "records".  */
+diff --git a/src/nsterm.m b/src/nsterm.m
+--- a/src/nsterm.m
++++ b/src/nsterm.m
+@@ -6177,5 +6177,25 @@
+ 	   name:NSAntialiasThresholdChangedNotification
+ 	 object:nil];
++
++  NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
++  NSNotificationCenter *workspaceCenter = [workspace notificationCenter];
++  [workspaceCenter addObserver:self
++                      selector:@selector(workspaceWillSleep:)
++                          name:NSWorkspaceWillSleepNotification
++                        object:workspace];
++  [workspaceCenter addObserver:self
++                      selector:@selector(workspaceDidWake:)
++                          name:NSWorkspaceDidWakeNotification
++                        object:workspace];
++  [workspaceCenter addObserver:self
++                      selector:@selector(workspaceWillPowerOff:)
++                          name:NSWorkspaceWillPowerOffNotification
++                        object:workspace];
++  [workspaceCenter
++    addObserver:self
++       selector:@selector(workspaceSessionDidResignActive:)
++           name:NSWorkspaceSessionDidResignActiveNotification
++         object:workspace];
+ #endif
+ 
+ #ifdef NS_IMPL_COCOA
+@@ -6214,6 +6234,47 @@
+ #endif
+ }
+ 
++#ifdef NS_IMPL_COCOA
++static void
++ns_send_workspace_event (int code)
++{
++  struct input_event event;
++  struct frame *frame = SELECTED_FRAME ();
++
++  EVENT_INIT (event);
++
++  event.kind = NS_NONKEY_EVENT;
++  event.code = code;
++  event.arg = Qt;
++  XSETFRAME (event.frame_or_window, frame);
++  kbd_buffer_store_event (&event);
++}
++
++- (void)workspaceWillSleep:(NSNotification *)notification
++{
++  NSTRACE ("[EmacsApp workspaceWillSleep:]");
++  ns_send_workspace_event (KEY_NS_WILL_SLEEP);
++}
++
++- (void)workspaceDidWake:(NSNotification *)notification
++{
++  NSTRACE ("[EmacsApp workspaceDidWake:]");
++  ns_send_workspace_event (KEY_NS_DID_WAKE);
++}
++
++- (void)workspaceWillPowerOff:(NSNotification *)notification
++{
++  NSTRACE ("[EmacsApp workspaceWillPowerOff:]");
++  ns_send_workspace_event (KEY_NS_WILL_POWER_OFF);
++}
++
++- (void)workspaceSessionDidResignActive:(NSNotification *)notification
++{
++  NSTRACE ("[EmacsApp workspaceSessionDidResignActive:]");
++  ns_send_workspace_event (KEY_NS_SESSION_RESIGNED);
++}
++#endif
++
+ 
+ /* Termination sequences:
+     C-x C-c:
+diff --git a/lisp/term/common-win.el b/lisp/term/common-win.el
+--- a/lisp/term/common-win.el
++++ b/lisp/term/common-win.el
+@@ -72,7 +72,11 @@
+ 	       (cons 12 (make-non-key-event 'ns-new-frame))
+ 	       (cons 13 (make-non-key-event 'ns-toggle-toolbar))
+ 	       (cons 14 (make-non-key-event 'ns-show-prefs))
+-	       (cons 15 (make-non-key-event 'mac-change-input-method))))))
++	       (cons 15 (make-non-key-event 'mac-change-input-method))
++	       (cons 17 (make-non-key-event 'ns-workspace-will-sleep))
++	       (cons 18 (make-non-key-event 'ns-workspace-did-wake))
++	       (cons 19 (make-non-key-event 'ns-workspace-will-power-off))
++	       (cons 20 (make-non-key-event 'ns-workspace-session-resigned))))))
+     (set-terminal-parameter frame 'x-setup-function-keys t)))
+ 
+ (defvar x-invocation-args)
+diff --git a/lisp/term/ns-win.el b/lisp/term/ns-win.el
+--- a/lisp/term/ns-win.el
++++ b/lisp/term/ns-win.el
+@@ -167,7 +167,47 @@
+ ;; Allow shift-clicks to work similarly to under Nextstep.
+ (define-key global-map [S-mouse-1] 'mouse-save-then-kill)
+ (global-unset-key [S-down-mouse-1])
++
++(defcustom ns-workspace-will-sleep-hook nil
++  "Hook run when macOS is about to put the system to sleep."
++  :type 'hook
++  :group 'ns)
++
++(defcustom ns-workspace-did-wake-hook nil
++  "Hook run after macOS wakes the system from sleep."
++  :type 'hook
++  :group 'ns)
++
++(defcustom ns-workspace-will-power-off-hook nil
++  "Hook run when macOS requests logout or system power off."
++  :type 'hook
++  :group 'ns)
++
++(defcustom ns-workspace-session-did-resign-active-hook nil
++  "Hook run before the macOS user session switches out."
++  :type 'hook
++  :group 'ns)
++
++(defun ns--run-workspace-will-sleep-hook ()
++  "Run `ns-workspace-will-sleep-hook'."
++  (interactive)
++  (run-hooks 'ns-workspace-will-sleep-hook))
++
++(defun ns--run-workspace-did-wake-hook ()
++  "Run `ns-workspace-did-wake-hook'."
++  (interactive)
++  (run-hooks 'ns-workspace-did-wake-hook))
++
++(defun ns--run-workspace-will-power-off-hook ()
++  "Run `ns-workspace-will-power-off-hook'."
++  (interactive)
++  (run-hooks 'ns-workspace-will-power-off-hook))
++
++(defun ns--run-workspace-session-did-resign-active-hook ()
++  "Run `ns-workspace-session-did-resign-active-hook'."
++  (interactive)
++  (run-hooks 'ns-workspace-session-did-resign-active-hook))
+ 
+ ;; Special Nextstep-generated events are converted to function keys.  Here
+ ;; are the bindings for them.  Note, these keys are actually declared in
+ ;; x-setup-function-keys in common-win.
+@@ -179,8 +219,16 @@
+ (define-key global-map [ns-new-frame] 'make-frame)
+ (define-key global-map [ns-toggle-toolbar] 'ns-toggle-toolbar)
+ (define-key global-map [ns-show-prefs] 'customize)
+ (define-key global-map [mac-change-input-method] 'mac-change-input-method)
++(define-key global-map [ns-workspace-will-sleep]
++            #'ns--run-workspace-will-sleep-hook)
++(define-key global-map [ns-workspace-did-wake]
++            #'ns--run-workspace-did-wake-hook)
++(define-key global-map [ns-workspace-will-power-off]
++            #'ns--run-workspace-will-power-off-hook)
++(define-key global-map [ns-workspace-session-resigned]
++            #'ns--run-workspace-session-did-resign-active-hook)
+ 
+ ;; Set up a number of aliases and other layers to pretend we're using
+ ;; the Choi/Mitsuharu Carbon port.
+ 
