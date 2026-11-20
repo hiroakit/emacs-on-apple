@@ -87,7 +87,7 @@ workflows:
             export CC="ccache clang"
             export CCACHE_DIR="$HOME/.ccache"
 
-            bash build.sh emacs30
+            bash build.sh emacs
 
             ccache -s
     - save-cache@1:
@@ -125,7 +125,7 @@ workflows:
             # string, so everything must be wrapped in one (progn ...).
             "$bin" --batch --eval "
             (progn
-              (unless (string-prefix-p \"${EMACS_VERSION}\" emacs-version)
+              (unless (string= \"${EMACS_VERSION}\" emacs-version)
                 (error \"unexpected emacs-version: %s\" emacs-version))
               (unless (fboundp 'mac-ime-toggle)
                 (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))
@@ -256,7 +256,7 @@ workflows:
             export CC="ccache clang"
             export CCACHE_DIR="$HOME/.ccache"
 
-            bash build.sh emacs30
+            bash build.sh emacs
 
             ccache -s
     - save-cache@1:
@@ -288,7 +288,7 @@ workflows:
             # string, so everything must be wrapped in one (progn ...).
             "$bin" --batch --eval "
             (progn
-              (unless (string-prefix-p \"${EMACS_VERSION}\" emacs-version)
+              (unless (string= \"${EMACS_VERSION}\" emacs-version)
                 (error \"unexpected emacs-version: %s\" emacs-version))
               (unless (fboundp 'mac-ime-toggle)
                 (error \"mac-ime-toggle not bound -- did the ns-inline-patch apply?\"))

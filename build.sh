@@ -34,7 +34,7 @@ help() {
 cat <<EOF
 Help: sh $0 command
 command:
-  emacs30: Build Emacs v30 (v${EMACS_VERSION})
+  emacs:   Build GNU Emacs ${EMACS_VERSION}
   clean:   Remove pkgdir, srcdir
 EOF
 }
@@ -83,8 +83,8 @@ codesign() {
                    ./pkg/Applications/Emacs/Emacs.app
 }
 
-# Build Emacs 30
-build_emacs30() {
+# Build the pinned GNU Emacs release
+build_emacs() {
     echo "Run ${FUNCNAME[0]}"
 
     declare -r pkgname="emacs"
@@ -114,37 +114,23 @@ build_emacs30() {
         checksum "${cached_archive}.tmp" "${sha256sum}"
         mv "${cached_archive}.tmp" "${cached_archive}"
     fi
-    if test -e ns-inline-patch; then
-        rm -rf ns-inline-patch
-    fi
-    git clone --depth 1 https://github.com/takaxp/ns-inline-patch.git
-
     checksum "${cached_archive}" "${sha256sum}"
-    if test $? -ne 0; then
-        echo "Unmatch sha256sum"
-        exit -1
-    fi
 
-    # emacs-29.1-inline.patch is the version the upstream README lists as
-    # applicable to Emacs 30.x. It creates src/macim.[hm] on its own, so
-    # unlike the old 26.3 setup it does not need 04-macos-big-sur.patch
-    # as a prerequisite. Confirmed on real hardware (M-x mac-ime-toggle
-    # works) before this was wired in. See docs/roadmap.md Phase 0 (0-A).
-    checksum ns-inline-patch/emacs-29.1-inline.patch\
-             "57dfd88aecf8366b561421db5b7828c9475b9cfb61743883a6296223cff82e2a"
-    if test $? -ne 0; then
-        echo "Unmatch sha256sum"
-        exit -1
-    fi
+    # Pin the upstream inline IME patch whose NS event table matches Emacs 31.
+    declare -r inline_revision="c858a26201f57b98da5bb0b21d0ff42e5ef27a67"
+    curl --fail --location --output ns-inline.patch \
+         "https://raw.githubusercontent.com/takaxp/ns-inline-patch/${inline_revision}/emacs-head-inline.patch"
+    checksum ns-inline.patch \
+             "1c77650e1eb5f661efc3fab02a9c8491915e5e65a40caf1503aff0e222c1a613"
 
     tar Jxfv "${cached_archive}"
     cd ${pkgname}-${pkgver}
-    patch -p1 -i ../../00-bump-copyright-year.patch
-    patch -p1 -i ../../01-remove-blessmail.patch
-    patch -p1 -i ../../03-bump-emacs-version.patch
-    patch -p1 -i ../../05-info-plist-lifecycle.patch
-    patch -p1 -i ../ns-inline-patch/emacs-29.1-inline.patch
-    patch -p1 -i ../../06-macos-workspace-notifications.patch
+    patch -t -F 0 -p1 -i ../../01-remove-blessmail.patch
+    patch -t -F 0 -p1 -i ../../03-bump-emacs-version.patch
+    patch -t -F 0 -p1 -i ../../05-info-plist-lifecycle.patch
+    patch -t -p1 -i ../ns-inline.patch
+    patch -t -F 0 -p1 -i ../../06-macos-workspace-notifications.patch
+    patch -t -F 0 -p1 -i ../../07-dir-locals-mode-selection.patch
 
     ./autogen.sh
 
@@ -189,8 +175,8 @@ case "$COMMAND" in
         codesign "$2"
         exit 0
         ;;
-    "emacs30")
-        clean && build_emacs30
+    "emacs"|"emacs30")
+        clean && build_emacs
         exit 0
         ;;
     *)

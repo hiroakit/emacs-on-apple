@@ -1,21 +1,21 @@
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -554,9 +554,6 @@
+@@ -545,9 +545,6 @@
+ src: Makefile
  	$(MAKE) -C $@ BIN_DESTDIR='$(BIN_DESTDIR)' \
  		 ELN_DESTDIR='$(ELN_DESTDIR)' all
- 
+-
 -blessmail: Makefile src
 -	$(MAKE) -C lib-src maybe-blessmail
--
+
  # We used to have one rule per */Makefile.in, but that leads to race
  # conditions with parallel makes, so assume that the timestamp on
- # ./Makefile represents the timestamp on all the other Makefiles.
 --- a/lib-src/Makefile.in
 +++ b/lib-src/Makefile.in
 @@ -294,12 +294,6 @@
  LOADLIBES = ../lib/libgnu.a $(LIBS_SYSTEM)
  $(EXE_FILES): ../lib/libgnu.a
- 
+
 -## Only used if we need blessmail, but no harm in always defining.
 -## This makes the actual blessmail executable.
 -blessmail: $(srcdir)/../lisp/mail/blessmail.el

@@ -1,0 +1,129 @@
+GNU Emacs emacs-31 backports for CVE-2026-131959, in upstream order:
+205ae0b0583dbfe09e258164adbc49e130645221 (validate directory-local modes)
+5bf385dad6e5a2c2a9584252b99484cdbfeae66b (mode-selection follow-up and tests)
+diff --git a/lisp/files.el b/lisp/files.el
+index 7bebf76..a4d08bc 100644
+--- a/lisp/files.el
++++ b/lisp/files.el
+@@ -3507,42 +3507,40 @@ If FUNCTION is nil, then it is not called.")
+ Also applies to `magic-fallback-mode-alist'.")
+
+-(defun set-auto-mode--find-matching-alist-entry (alist name case-insensitive)
++(defun set-auto-mode--from-matching-alist-entry ( alist name case-insensitive
++                                                  keep-mode-if-same dir-local)
+   "Find first matching entry in ALIST for file NAME.
+
+ If CASE-INSENSITIVE, the file system of file NAME is case-insensitive."
+-  (let (mode)
+-    (while name
+-      (let ((newmode
+-             (if case-insensitive
+-                 ;; Filesystem is case-insensitive.
+-                 (let ((case-fold-search t))
+-                   (assoc-default name alist 'string-match))
+-               ;; Filesystem is case-sensitive.
+-               (or
+-                ;; First match case-sensitively.
+-                (let ((case-fold-search nil))
+-                  (assoc-default name alist 'string-match))
+-                ;; Fallback to case-insensitive match.
+-                (and auto-mode-case-fold
+-                     (let ((case-fold-search t))
+-                       (assoc-default name alist 'string-match)))))))
+-        (when newmode
+-          (when mode
+-            ;; We had already found a mode but in a (REGEXP MODE t)
+-            ;; entry, so we still have to run MODE.  Let's do it now.
+-            ;; FIXME: It's kind of ugly to run the function here.
+-            ;; An alternative could be to return a list of functions and
+-            ;; callers.
+-            (set-auto-mode-0 mode t))
+-          (setq mode newmode))
+-        (if (and newmode
+-                 (not (functionp newmode))
+-                 (consp newmode)
+-                 (cadr newmode))
+-            ;; It's a (REGEXP MODE t): Keep looking but remember the MODE.
+-            (setq mode (car newmode)
+-                  name (substring name 0 (match-beginning 0)))
+-          (setq name nil))))
+-    mode))
++  (let (was-set)
++    (while
++        (let* ((newmode
++                (if case-insensitive
++                    ;; Filesystem is case-insensitive.
++                    (let ((case-fold-search t))
++                      (assoc-default name alist 'string-match))
++                  ;; Filesystem is case-sensitive.
++                  (or
++                   ;; First match case-sensitively.
++                   (let ((case-fold-search nil))
++                     (assoc-default name alist 'string-match))
++                   ;; Fallback to case-insensitive match.
++                   (and auto-mode-case-fold
++                        (let ((case-fold-search t))
++                         (assoc-default name alist 'string-match)))))))
++          (when newmode
++            (let* ((mode-t ;; Is it a (REGEXP MODE NON-NIL) entry?
++                    (and (not (functionp newmode))
++                         (consp newmode) (cadr newmode)))
++                   (mode (if (null mode-t) newmode
++                           (setq name (substring name 0 (match-beginning 0)))
++                           (car newmode))))
++              (when mode
++                (if (and dir-local
++                         (not (set-auto-mode--dir-local-valid-p mode)))
++                    (message "Ignoring invalid mode `%S'" mode)
++                  (set-auto-mode-0 mode keep-mode-if-same)
++                  (setq was-set t)))
++              mode-t))))
++    was-set))
+
+ (defun set-auto-mode--apply-alist (alist keep-mode-if-same dir-local)
+@@ -3556,6 +3554,5 @@ DIR-LOCAL non-nil means this call is via directory-locals, and
+ extra checks should be done."
+   (if buffer-file-name
+-      (let (mode
+-            (name buffer-file-name)
++      (let ((name buffer-file-name)
+             (remote-id (file-remote-p buffer-file-name))
+             (case-insensitive-p (file-name-case-insensitive-p
+@@ -3567,13 +3564,6 @@ extra checks should be done."
+                    (string-match (regexp-quote remote-id) name))
+           (setq name (substring name (match-end 0))))
+-        (setq mode (set-auto-mode--find-matching-alist-entry
+-                    alist name case-insensitive-p))
+-        (when (and dir-local mode
+-                   (not (set-auto-mode--dir-local-valid-p mode)))
+-          (message "Ignoring invalid mode `%S'" mode)
+-          (setq mode nil))
+-        (when mode
+-          (set-auto-mode-0 mode keep-mode-if-same)
+-          t))))
++        (set-auto-mode--from-matching-alist-entry
++         alist name case-insensitive-p keep-mode-if-same dir-local))))
+
+ (defun set-auto-mode--dir-local-valid-p (mode)
+diff --git a/test/lisp/files-tests.el b/test/lisp/files-tests.el
+index d7ae7e3..ba303c4 100644
+--- a/test/lisp/files-tests.el
++++ b/test/lisp/files-tests.el
+@@ -1781,10 +1781,13 @@ The door of all subtleties!
+ (defun files-tests--check-mode (filename)
+   "Return the major mode found in `auto-mode-alist' for FILENAME."
+-  (set-auto-mode--find-matching-alist-entry
+-   auto-mode-alist
+-   (concat "/home/jrhacker/" filename)
+-   nil))
++  (with-temp-buffer
++    (set-auto-mode--from-matching-alist-entry
++     auto-mode-alist
++     (concat "/home/jrhacker/" filename)
++     nil t nil)
++    major-mode))
+
+ (ert-deftest files-tests-auto-mode-alist ()
++  (should (eq (files-tests--check-mode "foo.el.orig") #'emacs-lisp-mode))
+   (should (eq (files-tests--check-mode ".gdbinit.in") #'gdb-script-mode))
+   (should (eq (files-tests--check-mode ".gdbinit") #'gdb-script-mode))
