@@ -130,6 +130,7 @@ build_emacs() {
     patch -t -F 0 -p1 -i ../../05-info-plist-lifecycle.patch
     patch -t -p1 -i ../ns-inline.patch
     patch -t -F 0 -p1 -i ../../06-macos-workspace-notifications.patch
+    patch -t -F 0 -p1 -i ../../07-dir-locals-mode-selection.patch
 
     ./autogen.sh
 
