@@ -8,8 +8,8 @@ Emacs for Apple devices.
 
 ```sh
 # Required autoconf, automake, pkg-config, Xcode Command Line Tools
-# Experimental: Emacs 30.2. See docs/roadmap.md Phase 0 for status.
-sh build.sh emacs30
+# Experimental: Emacs 31.1. See docs/roadmap.md Phase 0 for status.
+sh build.sh emacs
 ```
 
 The verified Emacs source archive is cached in `.cache/downloads/` and reused
@@ -64,7 +64,7 @@ Start here if you are picking up this work:
 # Supporting
 
 - macOS Sequoia
-- Emacs v30.2
+- Emacs v31.1
 
 # Contributing
 

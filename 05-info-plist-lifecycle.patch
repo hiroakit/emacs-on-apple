@@ -1,9 +1,9 @@
 --- a/nextstep/templates/Info.plist.in
 +++ b/nextstep/templates/Info.plist.in
-@@ -693,5 +693,15 @@
-         <string>Emacs requires permission to access the Downloads folder.</string>
-         <key>NSRemovableVolumesUsageDescription</key>
+@@ -695,5 +695,15 @@
          <string>Emacs requires permission to access files on Removable Volumes.</string>
+         <key>NSSpeechRecognitionUsageDescription</key>
+         <string>Emacs requires permission to handle any speech recognition.</string>
 +	<key>LSMinimumSystemVersion</key>
 +	<string>15.0</string>
 +	<key>NSHighResolutionCapable</key>
